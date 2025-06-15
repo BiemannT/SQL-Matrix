@@ -1,4 +1,5 @@
 ﻿using System.Security;
+using System.Text.Json;
 
 namespace Matrix.MsSql.Unit
 {
@@ -21,12 +22,17 @@ namespace Matrix.MsSql.Unit
             {
                 Console.WriteLine("Please enter the filename of the json test-file:");
                 TestFileName = Console.ReadLine() ?? string.Empty;
+
+                if (string.IsNullOrWhiteSpace(TestFileName) || !File.Exists(TestFileName.Trim('"').ToString()))
+                {
+                    Console.WriteLine("Invalid Filename. Try again.");
+                } 
             }
 
             // Datei Infos prüfen
             try
             {
-                TestFile = new (TestFileName.Trim('"').ToString());
+                TestFile = new(TestFileName.Trim('"').ToString());
 
                 if (TestFile.IsReadOnly)
                 {
@@ -34,6 +40,12 @@ namespace Matrix.MsSql.Unit
                 }
 
                 Console.Title = string.Concat("Matrix MS-SQL Unit Test - ", TestFile.Name);
+
+                string TestJson = File.ReadAllText(TestFile.FullName);
+                TestDefinition test = JsonSerializer.Deserialize<TestDefinition>(TestJson)!;
+                test.FileName = TestFile;
+
+                Console.WriteLine($"Test Object: {test.TestObjectType} {test.SchemaName}.{test.TestObjectName}");
             }
             catch (SecurityException)
             {
@@ -50,13 +62,16 @@ namespace Matrix.MsSql.Unit
                 Console.WriteLine("WARNING: Full path name to the test file too long!");
                 Environment.Exit(2);
             }
+            catch (JsonException)
+            {
+                Console.WriteLine("WARNING: The test file contains invalid json code - or - required fields are missing!");
+                Environment.Exit(2);
+            }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
                 Environment.Exit(2);
             }
-
-            Console.WriteLine("Datei gültig");
 
             Console.ReadLine();
         }
