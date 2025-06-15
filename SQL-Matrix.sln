@@ -4,6 +4,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.14.36203.30
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SQL-Matrix-Unit-CLI", "SQL-Matrix-Unit-CLI\SQL-Matrix-Unit-CLI.csproj", "{351C699B-9B84-A840-751B-89F0F3154024}"
+	ProjectSection(ProjectDependencies) = postProject
+		{86A67E0A-8423-4C8E-A30E-C94F8F61912B} = {86A67E0A-8423-4C8E-A30E-C94F8F61912B}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SQL-Matrix-Library", "SQL-Matrix-Library\SQL-Matrix-Library.csproj", "{86A67E0A-8423-4C8E-A30E-C94F8F61912B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +20,10 @@ Global
 		{351C699B-9B84-A840-751B-89F0F3154024}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{351C699B-9B84-A840-751B-89F0F3154024}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{351C699B-9B84-A840-751B-89F0F3154024}.Release|Any CPU.Build.0 = Release|Any CPU
+		{86A67E0A-8423-4C8E-A30E-C94F8F61912B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{86A67E0A-8423-4C8E-A30E-C94F8F61912B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{86A67E0A-8423-4C8E-A30E-C94F8F61912B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{86A67E0A-8423-4C8E-A30E-C94F8F61912B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
