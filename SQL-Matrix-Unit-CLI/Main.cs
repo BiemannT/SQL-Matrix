@@ -5,11 +5,36 @@ namespace Matrix.MsSql.Unit
 {
     internal class CLI
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="args"></param>
+        /// <remarks>
+        ///     <list type="table">
+        ///         <listheader>
+        ///             <term>Returncodes</term>
+        ///         </listheader>
+        ///         <item>
+        ///             <description>0</description>
+        ///             <description>Succesful execution.</description>
+        ///         </item>
+        ///         <item>
+        ///             <description>1</description>
+        ///             <description>Execution cancelled by user.</description>
+        ///         </item>
+        ///         <item>
+        ///             <description>2</description>
+        ///             <description>Error during reading the json test file.</description>
+        ///         </item>
+        ///     </list>
+        /// </remarks>
         static void Main(string[] args)
         {
-            string TestFileName = string.Empty;
             FileInfo TestFile;
+            TestDefinition? definition;
+            IPEndPoint SqlEndpoint;
 
+            // Trigger für den Abbruch
             Console.CancelKeyPress += Console_CancelKeyPress;
 
             Console.Title = "Matrix MS-SQL Unit Test";
@@ -18,58 +43,96 @@ namespace Matrix.MsSql.Unit
 
             // Dateinamen für die Testdatei abfragen.
             // Wenn im Windows-Explorer die Funkktion "Pfad kopieren" verwendet wird, wird der Dateiname in " eingeschlossen.
-            while (string.IsNullOrWhiteSpace(TestFileName) || !File.Exists(TestFileName.Trim('"').ToString()))
+            string TestFileName;
+            do
             {
                 Console.WriteLine("Please enter the filename of the json test-file:");
                 TestFileName = Console.ReadLine() ?? string.Empty;
 
-                if (string.IsNullOrWhiteSpace(TestFileName) || !File.Exists(TestFileName.Trim('"').ToString()))
+                // Datei angegeben?
+                if (string.IsNullOrWhiteSpace(TestFileName))
                 {
-                    Console.WriteLine("Invalid Filename. Try again.");
-                } 
-            }
-
-            // Datei Infos prüfen
-            try
-            {
-                TestFile = new(TestFileName.Trim('"').ToString());
-
-                if (TestFile.IsReadOnly)
-                {
-                    Console.WriteLine("NOTICE: The selected File is read only. No Updates on the test file will be performed.");
+                    Console.WriteLine("No input. Try again.");
+                    continue;
                 }
 
-                Console.Title = string.Concat("Matrix MS-SQL Unit Test - ", TestFile.Name);
+                // Existiert die Datei?
+                if (!File.Exists(TestFileName.Trim('"').ToString()))
+                {
+                    Console.WriteLine("File does not exist. Try again.");
+                    continue;
+                }
+                else
+                {
+                    // Versuche Datei Infos abzufragen
+                    try
+                    {
+                        TestFile = new(TestFileName.Trim('"').ToString());
 
-                string TestJson = File.ReadAllText(TestFile.FullName);
-                TestDefinition test = JsonSerializer.Deserialize<TestDefinition>(TestJson)!;
-                test.FileName = TestFile;
+                    }
+                    catch (SecurityException ex)
+                    {
+                        Console.WriteLine("WARNING: Access to the test file denied! Try again.");
+                        Console.WriteLine(ex.Message);
+                        continue;
+                    }
+                    catch (UnauthorizedAccessException ex)
+                    {
+                        Console.WriteLine("WARNING: Access to the test file denied!");
+                        Console.WriteLine(ex.Message);
+                        continue;
+                    }
+                    catch (PathTooLongException ex)
+                    {
+                        Console.WriteLine("WARNING: Full path name to the test file too long!");
+                        Console.WriteLine(ex.Message);
+                        continue;
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                        continue;
+                    }
 
-                Console.WriteLine($"Test Object: {test.TestObjectType} {test.SchemaName}.{test.TestObjectName}");
+                    // Datei vorhanden und lesbar
+                    break;
+                }
             }
-            catch (SecurityException)
+            while (true);
+
+            // Testdatei schreibgeschützt?
+            if (TestFile.IsReadOnly)
             {
-                Console.WriteLine("WARNING: Access to the test file denied!");
-                Environment.Exit(2);
+                Console.WriteLine("NOTICE: The selected File is read only. No Updates on the test file will be performed.");
             }
-            catch (UnauthorizedAccessException)
+
+            Console.Title = string.Concat("Matrix MS-SQL Unit Test - ", TestFile.Name);
+
+            // JSON-Daten lesen
+            try
             {
-                Console.WriteLine("WARNING: Access to the test file denied!");
-                Environment.Exit(2);
+                definition = JsonSerializer.Deserialize<TestDefinition>(TestFile.Open(FileMode.Open, FileAccess.Read));
+
+                if (definition == null)
+                {
+                    Console.WriteLine("The test file could not be read. Execution is cancelled.");
+                    Environment.Exit(2);
+                    
+                }
+                definition.FileName = TestFile;
+
+                Console.WriteLine("Test file is valid.");
+                Console.WriteLine($"Test Object: {definition.TestObjectType} {definition.SchemaName}.{definition.TestObjectName}");
             }
-            catch (PathTooLongException)
-            {
-                Console.WriteLine("WARNING: Full path name to the test file too long!");
-                Environment.Exit(2);
-            }
-            catch (JsonException)
+            catch (JsonException ex)
             {
                 Console.WriteLine("WARNING: The test file contains invalid json code - or - required fields are missing!");
+                Console.WriteLine(ex.Message);
                 Environment.Exit(2);
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
+                Console.WriteLine(ex.Message);
                 Environment.Exit(2);
             }
 
