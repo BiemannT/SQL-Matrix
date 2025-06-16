@@ -48,6 +48,7 @@ namespace Matrix.MsSql.Unit
         /// </summary>
         [JsonPropertyName("TestObjectType")]
         [JsonPropertyOrder(-9)]
+        [JsonRequired]
         public TestObjectTypeEnum TestObjectType { get; set; }
 
         /// <summary>
