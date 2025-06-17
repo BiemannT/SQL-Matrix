@@ -108,8 +108,7 @@ namespace Matrix.MsSql.Unit
                     // Datei vorhanden und lesbar
                     break;
                 }
-            }
-            while (true);
+            } while (true);
 
             // Testdatei schreibgeschützt?
             if (TestFile.IsReadOnly)
@@ -176,8 +175,7 @@ namespace Matrix.MsSql.Unit
                     Console.WriteLine("No input. Try again.");
                     SqlHost = string.Empty;
                 }
-            }
-            while (string.IsNullOrWhiteSpace(SqlHost));
+            } while (string.IsNullOrWhiteSpace(SqlHost));
 
             // Server Port
             do
@@ -211,8 +209,18 @@ namespace Matrix.MsSql.Unit
             SqlInstance = Console.ReadLine() ?? string.Empty;
 
             // SQL Anmeldename
-            Console.WriteLine("Enter the login name (Default name 'sa', if left blank):");
-            SqlLoginName = Console.ReadLine() ?? "sa";
+            do
+            {
+                Console.WriteLine("Enter the login name (Default name 'sa'):");
+                SqlLoginName = Console.ReadLine() ?? string.Empty;
+
+                if (string.IsNullOrWhiteSpace(SqlLoginName))
+                {
+                    Console.WriteLine("No input. Try again.");
+                    SqlLoginName = string.Empty;
+                }
+
+            } while (string.IsNullOrWhiteSpace(SqlLoginName));
 
             // SQL Login Passwort
             ConsoleKeyInfo key;
@@ -256,18 +264,76 @@ namespace Matrix.MsSql.Unit
                     CommandTimeout = 10
                 };
 
-                cmd.Connection.Open();
                 try
                 {
+                    cmd.Connection.Open();
                     cmd.ExecuteNonQuery();
                 }
-                catch
+                catch (Exception ex)
                 {
                     Console.WriteLine("WARNING: Failed to connect to the SQL-Server!");
+                    Console.WriteLine(ex.Message);
                     Environment.Exit(3);
                 }
             }
             Console.WriteLine($"Connection to the SQL-Server {SqlHostEntry.HostName} established successfully.");
+
+            // Dateinamen der DACPAC-Datei abfragen.
+            string DacFileName;
+            do
+            {
+                Console.WriteLine("Enter the filename of the DACPAC-package file:");
+                DacFileName = Console.ReadLine() ?? string.Empty;
+
+                // Datei angegeben?
+                if (string.IsNullOrWhiteSpace(DacFileName))
+                {
+                    Console.WriteLine("No input. Try again.");
+                    continue;
+                }
+
+                // Existiert die Datei?
+                if (!File.Exists(DacFileName.Trim('"').ToString()))
+                {
+                    Console.WriteLine("File does not exist. Try again.");
+                    continue;
+                }
+                else
+                {
+                    // Versuche Datei Infos abzufragen
+                    try
+                    {
+                        definition.DacpacFile = new(DacFileName.Trim('"').ToString());
+                    }
+                    catch (SecurityException ex)
+                    {
+                        Console.WriteLine("WARNING: Access to the dacpac file denied! Try again.");
+                        Console.WriteLine(ex.Message);
+                        continue;
+                    }
+                    catch (UnauthorizedAccessException ex)
+                    {
+                        Console.WriteLine("WARNING: Access to the dacpac file denied! Try again.");
+                        Console.WriteLine(ex.Message);
+                        continue;
+                    }
+                    catch (PathTooLongException ex)
+                    {
+                        Console.WriteLine("WARNING: Full path name to the dacpac file too long!");
+                        Console.WriteLine(ex.Message);
+                        continue;
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                        continue;
+                    }
+
+                    // Datei vorhanden und lesbar
+                    break;
+                }
+            }
+            while (true);
 
             SqlLoginPassword.Dispose();
             Console.ReadLine();
