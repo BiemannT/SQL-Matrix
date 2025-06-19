@@ -35,6 +35,8 @@ namespace Matrix.MsSql
             this._ConnectRetryCount = 3;
             this._ConnectRetryInterval = new(0, 0, 5);
             this._ConnectTimeout = new(0, 0, 10);
+
+            this._Database = "master";
         }
 
         #region Implementations
@@ -125,6 +127,7 @@ namespace Matrix.MsSql
                     ConnectTimeout = 10,
                     CommandTimeout = 10,
                     DataSource = $"tcp:{item},{this._SQLServerPort}{(string.IsNullOrWhiteSpace(this._SQLServerInstance) ? "" : string.Concat("\\", this._SQLServerInstance))}",
+                    InitialCatalog = this._Database,
                     IPAddressPreference = SqlConnectionIPAddressPreference.IPv4First,
                     IntegratedSecurity = false,
                     PersistSecurityInfo = false,
@@ -452,6 +455,72 @@ namespace Matrix.MsSql
                     this._ConnectTimeout = value;
                 }
             }
+        }
+
+        #endregion
+
+        #region Database
+
+        private string _Database;
+
+        /// <summary>
+        /// Gets or sets the initial database name for the connection with the SQL-Server.
+        /// </summary>
+        /// <value>
+        /// The name of the database to be connected.
+        /// The default database is "master".
+        /// </value>
+        public string Database
+        {
+            get => this._Database;
+            set
+            {
+                // Datenbanknamen geändert?
+                if (!value.Equals(this._Database))
+                {
+                    this._CheckConnection = false;
+                }
+                this._Database = value;
+            }
+        }
+
+        #endregion
+
+        #region GetConnectionString
+
+        /// <summary>
+        /// Prepare a Sql Connection String with the given parameters from this instance.
+        /// </summary>
+        /// <returns>Returns an instance of <see cref="SqlConnectionStringBuilder"/> with the parameters from this instance, if the connection is valid.</returns>
+        /// <exception cref="InvalidOperationException">Will be thrown, if the connection to the SQL-Server failed with the given parameter.</exception>
+        protected SqlConnectionStringBuilder GetConnectionString()
+        {
+            // Falls noch keine Prüfung durchgeführt wurde diese zuerst ausführen.
+            if (this._CheckConnection)
+            {
+                try
+                {
+                    this.CheckConnection();
+                }
+                catch (InvalidOperationException)
+                {
+                    throw;
+                }
+            }
+
+            return new SqlConnectionStringBuilder()
+            {
+                Authentication = SqlAuthenticationMethod.SqlPassword,
+                ConnectRetryCount = this._ConnectRetryCount,
+                ConnectRetryInterval = (int)this._ConnectRetryInterval.TotalSeconds,
+                ConnectTimeout = (int)this._ConnectTimeout.TotalSeconds,
+                DataSource = $"tcp:{this._SQLServerIP.AddressList[0]},{this._SQLServerPort}{(string.IsNullOrWhiteSpace(this._SQLServerInstance) ? "" : string.Concat("\\", this._SQLServerInstance))}",
+                InitialCatalog = _Database,
+                IPAddressPreference = SqlConnectionIPAddressPreference.IPv4First,
+                IntegratedSecurity = false,
+                PersistSecurityInfo = false,
+                TrustServerCertificate = true
+            };
         }
 
         #endregion
