@@ -5,7 +5,7 @@ using System.Text.Json;
 
 namespace Matrix.MsSql.Unit
 {
-    internal class CLI
+    internal partial class CLI
     {
         /// <summary>
         /// 
@@ -38,12 +38,9 @@ namespace Matrix.MsSql.Unit
         {
             FileInfo TestFile;
             TestDefinition? definition = new();
-            IPEndPoint SqlEndpoint;
-            string SqlInstance;
-            string SqlLoginName;
-            SecureString SqlLoginPassword;
             SqlCredential SqlCredential;
             SqlConnectionStringBuilder SqlConnBuilder;
+            SetupSqlConnection SqlConn;
 
             // Trigger für den Abbruch
             Console.CancelKeyPress += Console_CancelKeyPress;
@@ -148,107 +145,17 @@ namespace Matrix.MsSql.Unit
 
             // Verbindung zum SQL-Server herstellen
             Console.WriteLine("Setup SQL-Connection");
-
-            // Server Hostname
-            string SqlHost;
-            IPHostEntry SqlHostEntry = new();
-
-            do
-            {
-                Console.WriteLine("Enter Server Hostname or IPv4 Address:");
-                SqlHost = Console.ReadLine() ?? string.Empty;
-                    
-                if (!string.IsNullOrWhiteSpace(SqlHost))
-                {
-                    try
-                    {
-                        SqlHostEntry = Dns.GetHostEntry(SqlHost, System.Net.Sockets.AddressFamily.InterNetwork);
-                    }
-                    catch
-                    {
-                        Console.WriteLine($"Could not find {SqlHost}.");
-                        SqlHost = string.Empty;
-                    }
-                }
-                else
-                {
-                    Console.WriteLine("No input. Try again.");
-                    SqlHost = string.Empty;
-                }
-            } while (string.IsNullOrWhiteSpace(SqlHost));
-
-            // Server Port
-            do
-            {
-                Console.WriteLine("Enter the port number on which the SQL-Server is listening (default: 1433):");
-                if (int.TryParse(Console.ReadLine(), out int SqlPort))
-                {
-                    try
-                    {
-                        SqlEndpoint = new IPEndPoint(SqlHostEntry.AddressList[0], SqlPort);
-                    }
-                    catch (ArgumentOutOfRangeException)
-                    {
-                        Console.WriteLine($"The port number {SqlPort} is not supported. Try again.");
-                        continue;
-                    }
-
-                    // SQL-Server Adresse erfolgreich gesetzt
-                    break;
-                }
-                else
-                {
-                    Console.WriteLine("The entered value is not a valid number. Try again.");
-                    continue;
-                }
-
-            } while (true);
-
-            // Optional: Server Instanz Name
-            Console.WriteLine("Enter optionally the SQL-Server instance name. Left blank if no named instances installed.");
-            SqlInstance = Console.ReadLine() ?? string.Empty;
-
-            // SQL Anmeldename
-            do
-            {
-                Console.WriteLine("Enter the login name (Default name 'sa'):");
-                SqlLoginName = Console.ReadLine() ?? string.Empty;
-
-                if (string.IsNullOrWhiteSpace(SqlLoginName))
-                {
-                    Console.WriteLine("No input. Try again.");
-                    SqlLoginName = string.Empty;
-                }
-
-            } while (string.IsNullOrWhiteSpace(SqlLoginName));
-
-            // SQL Login Passwort
-            ConsoleKeyInfo key;
-            SqlLoginPassword = new();
-            Console.WriteLine($"Enter the password for the login name {SqlLoginName}:");
-            do
-            {
-                key = Console.ReadKey(true);
-                // Nur druckbare Zeichen zulassen
-                if (((int) key.Key) >= 32)
-                {
-                    SqlLoginPassword.AppendChar(key.KeyChar);
-                    Console.Write("*");
-                }
-
-            } while (key.Key != ConsoleKey.Enter);
-            SqlLoginPassword.MakeReadOnly();
-            Console.Write(Environment.NewLine);
+            SqlConn = PrepareSqlConnetion();
 
             // SQL-Connection aufbereiten
-            SqlCredential = new(SqlLoginName, SqlLoginPassword);
+            SqlCredential = new(SqlConn.SQLServerLoginName, SqlConn.SQLServerLoginPassword);
             SqlConnBuilder = new()
             {
                 Authentication = SqlAuthenticationMethod.SqlPassword,
                 ConnectRetryCount = 3,
                 ConnectRetryInterval = 5,
                 ConnectTimeout = 10,
-                DataSource = $"tcp:{SqlEndpoint.Address},{SqlEndpoint.Port}{(string.IsNullOrWhiteSpace(SqlInstance) ? "" : string.Concat("\\", SqlInstance))}",
+                DataSource = $"tcp:{SqlConn.SQLServerIP.AddressList[0]},{SqlConn.SQLServerPort}{(string.IsNullOrWhiteSpace(SqlConn.SQLServerInstance) ? "" : string.Concat("\\", SqlConn.SQLServerInstance))}",
                 IPAddressPreference = SqlConnectionIPAddressPreference.IPv4First,
                 IntegratedSecurity = false,
                 PersistSecurityInfo = false,
@@ -276,7 +183,7 @@ namespace Matrix.MsSql.Unit
                     Environment.Exit(3);
                 }
             }
-            Console.WriteLine($"Connection to the SQL-Server {SqlHostEntry.HostName} established successfully.");
+            Console.WriteLine($"Connection to the SQL-Server {SqlConn.SQLServerIP.HostName} established successfully.");
 
             // Dateinamen der DACPAC-Datei abfragen.
             string DacFileName;
@@ -335,7 +242,6 @@ namespace Matrix.MsSql.Unit
             }
             while (true);
 
-            SqlLoginPassword.Dispose();
             Console.ReadLine();
         }
 
