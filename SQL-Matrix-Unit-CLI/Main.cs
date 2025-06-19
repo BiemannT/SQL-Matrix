@@ -242,6 +242,7 @@ namespace Matrix.MsSql.Unit
             }
             while (true);
 
+            SqlConn.Dispose();
             Console.ReadLine();
         }
 

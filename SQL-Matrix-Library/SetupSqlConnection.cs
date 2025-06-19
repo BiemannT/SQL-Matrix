@@ -9,7 +9,7 @@ namespace Matrix.MsSql
     /// <remarks>
     /// This class encapsulate the essential properties of the Microsoft.Data.SqlClient library.
     /// </remarks>
-    public class SetupSqlConnection
+    public class SetupSqlConnection : IDisposable
     {
         /// <summary>
         /// Initialize a new instance of the <see cref="SetupSqlConnection"/>-class with default values.
@@ -31,6 +31,51 @@ namespace Matrix.MsSql
             this._SQLServerLoginPassword = new();
             this._SQLServerLoginPassword.MakeReadOnly();
         }
+
+        #region Implementations
+
+        #region IDisposable
+        private bool _disposed = false;
+
+        /// <summary>
+        /// <inheritdoc cref="IDisposable.Dispose"/>
+        /// </summary>
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        /// <summary>
+        /// <inheritdoc cref="IDisposable.Dispose"/>
+        /// </summary>
+        /// <param name="disposing">If <see langword="true"/> managed resources will be disposed also.</param>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!this._disposed)
+            {
+                if (disposing)
+                {
+                    // Bereinigung verwalteter Code
+                    this._SQLServerLoginPassword.Dispose();
+                }
+
+                // Manuelle Bereinigung nicht verwalteter Code ohne Dispose Prozedur
+
+                this._disposed = true;
+            }
+        }
+
+        /// <summary>
+        /// Destructor function of this class.
+        /// </summary>
+        ~SetupSqlConnection()
+        {
+            Dispose(false);
+        }
+        #endregion
+
+        #endregion
 
         #region SQLServerIP
 
