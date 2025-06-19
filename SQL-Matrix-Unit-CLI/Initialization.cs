@@ -1,10 +1,101 @@
 ﻿using System.Net;
 using System.Security;
+using System.Text.Json;
 
 namespace Matrix.MsSql.Unit
 {
     internal partial class CLI
     {
+        /// <summary>
+        /// Requests on the console the json test-file and read the content.
+        /// </summary>
+        /// <returns>Returns an instance of <see cref="TestDefinition"/> with the information readed from the test file.</returns>
+        /// <exception cref="Exception">If an error occured during reading the json file an exception will be thrown.</exception>
+        private static TestDefinition PrepareTestDefinition()
+        {
+            TestDefinition definition;
+            string input;
+
+            // Dateinamen für die Testdatei abfragen
+            // Wenn im Windows Explorer die Funktion "Pfad kopieren" verwendet wird, wird der Dateipfad in '"' eingeschlossen.
+            do
+            {
+                Console.WriteLine("Enter the filename of the json test-file:");
+                input = Console.ReadLine() ?? string.Empty;
+
+                if (string.IsNullOrWhiteSpace(input))
+                {
+                    Console.WriteLine("No input. Try again.");
+                    continue;
+                }
+
+                // Existiert die Datei
+                if (File.Exists(input.Trim('"').ToString()))
+                {
+                    FileInfo testFile;
+
+                    try
+                    {
+                        testFile = new(input.Trim('"').ToString());
+                    }
+                    catch (SecurityException)
+                    {
+                        Console.WriteLine("WARNING: Access to the test file denied! Try again.");
+                        continue;
+                    }
+                    catch (UnauthorizedAccessException)
+                    {
+                        Console.WriteLine("WARNING: Access to the test file denied!");
+                        continue;
+                    }
+                    catch (PathTooLongException)
+                    {
+                        Console.WriteLine("WARNING: Full path name to the test file too long!");
+                        continue;
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                        continue;
+                    }
+
+                    // Testdatei schreibgeschützt?
+                    if (testFile.IsReadOnly)
+                    {
+                        Console.WriteLine("NOTICE: The selected test file is read-only. No updates on the test file will be performed.");
+                    }
+
+                    // JSON-Daten lesen
+                    try
+                    {
+                        definition = JsonSerializer.Deserialize<TestDefinition>(testFile.Open(FileMode.Open, FileAccess.Read)) ?? throw new Exception("Failure during reading the test file occured. Execution is cancelled.");
+                        definition.FileName = testFile;
+
+                        Console.WriteLine($"Test file valid. Test Object: {definition.TestObjectType} {definition.SchemaName}.{definition.TestObjectName}");
+                    }
+                    catch (JsonException ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                        throw new Exception("WARNING: The test file contains invalid json code - or - required fields are missing!");
+                    }
+                    catch (Exception)
+                    {
+                        throw;
+                    }
+
+                    // Datei existiert und lesbar
+                    break;
+                }
+                else
+                {
+                    Console.WriteLine("File does not exist. Try again.");
+                    continue;
+                }
+            } while (true);
+
+            return definition;
+        }
+
         /// <summary>
         /// Requests on the console the necessary information to setup the SQL-Server connection.
         /// </summary>

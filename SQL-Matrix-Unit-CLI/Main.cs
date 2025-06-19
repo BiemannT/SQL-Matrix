@@ -36,8 +36,7 @@ namespace Matrix.MsSql.Unit
         /// </remarks>
         static void Main(string[] args)
         {
-            FileInfo TestFile;
-            TestDefinition? definition = new();
+            TestDefinition Definition;
             SqlCredential SqlCredential;
             SqlConnectionStringBuilder SqlConnBuilder;
             SetupSqlConnection SqlConn;
@@ -49,98 +48,17 @@ namespace Matrix.MsSql.Unit
 
             Console.WriteLine("Matrix MS-SQL Unit test started");
 
-            // Dateinamen für die Testdatei abfragen.
-            // Wenn im Windows-Explorer die Funkktion "Pfad kopieren" verwendet wird, wird der Dateiname in " eingeschlossen.
-            string TestFileName;
-            do
-            {
-                Console.WriteLine("Please enter the filename of the json test-file:");
-                TestFileName = Console.ReadLine() ?? string.Empty;
-
-                // Datei angegeben?
-                if (string.IsNullOrWhiteSpace(TestFileName))
-                {
-                    Console.WriteLine("No input. Try again.");
-                    continue;
-                }
-
-                // Existiert die Datei?
-                if (!File.Exists(TestFileName.Trim('"').ToString()))
-                {
-                    Console.WriteLine("File does not exist. Try again.");
-                    continue;
-                }
-                else
-                {
-                    // Versuche Datei Infos abzufragen
-                    try
-                    {
-                        TestFile = new(TestFileName.Trim('"').ToString());
-
-                    }
-                    catch (SecurityException ex)
-                    {
-                        Console.WriteLine("WARNING: Access to the test file denied! Try again.");
-                        Console.WriteLine(ex.Message);
-                        continue;
-                    }
-                    catch (UnauthorizedAccessException ex)
-                    {
-                        Console.WriteLine("WARNING: Access to the test file denied!");
-                        Console.WriteLine(ex.Message);
-                        continue;
-                    }
-                    catch (PathTooLongException ex)
-                    {
-                        Console.WriteLine("WARNING: Full path name to the test file too long!");
-                        Console.WriteLine(ex.Message);
-                        continue;
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine(ex.Message);
-                        continue;
-                    }
-
-                    // Datei vorhanden und lesbar
-                    break;
-                }
-            } while (true);
-
-            // Testdatei schreibgeschützt?
-            if (TestFile.IsReadOnly)
-            {
-                Console.WriteLine("NOTICE: The selected File is read only. No Updates on the test file will be performed.");
-            }
-
-            Console.Title = string.Concat("Matrix MS-SQL Unit Test - ", TestFile.Name);
-
-            // JSON-Daten lesen
+            // Dateinamen für die Testdatei abfragen und einlesen.
             try
             {
-                definition = JsonSerializer.Deserialize<TestDefinition>(TestFile.Open(FileMode.Open, FileAccess.Read));
-
-                if (definition == null)
-                {
-                    Console.WriteLine("The test file could not be read. Execution is cancelled.");
-                    Environment.Exit(2);
-                    
-                }
-                definition.FileName = TestFile;
-
-                Console.WriteLine("Test file is valid.");
-                Console.WriteLine($"Test Object: {definition.TestObjectType} {definition.SchemaName}.{definition.TestObjectName}");
-            }
-            catch (JsonException ex)
-            {
-                Console.WriteLine("WARNING: The test file contains invalid json code - or - required fields are missing!");
-                Console.WriteLine(ex.Message);
-                Environment.Exit(2);
+                Definition = PrepareTestDefinition();
+                Console.Title = string.Concat("Matrix MS-SQL Unit Test - ", Definition.FileName.Name);
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
                 Environment.Exit(2);
+                return;
             }
 
             // Verbindung zum SQL-Server herstellen
@@ -162,11 +80,11 @@ namespace Matrix.MsSql.Unit
                 TrustServerCertificate = true
             };
 
-            definition.SqlConn = new(SqlConnBuilder.ConnectionString, SqlCredential);
-            using (definition.SqlConn)
+            Definition.SqlConn = new(SqlConnBuilder.ConnectionString, SqlCredential);
+            using (Definition.SqlConn)
             {
                 string TestConnCmd = "SELECT GETDATE();";
-                SqlCommand cmd = new(TestConnCmd, definition.SqlConn)
+                SqlCommand cmd = new(TestConnCmd, Definition.SqlConn)
                 {
                     CommandTimeout = 10
                 };
@@ -210,7 +128,7 @@ namespace Matrix.MsSql.Unit
                     // Versuche Datei Infos abzufragen
                     try
                     {
-                        definition.DacpacFile = new(DacFileName.Trim('"').ToString());
+                        Definition.DacpacFile = new(DacFileName.Trim('"').ToString());
                     }
                     catch (SecurityException ex)
                     {
