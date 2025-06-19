@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using Microsoft.Data.SqlClient;
+using System.Net;
 using System.Security;
 
 namespace Matrix.MsSql
@@ -16,20 +17,24 @@ namespace Matrix.MsSql
         /// </summary>
         public SetupSqlConnection()
         {
-            this.SQLServerIP = new()
+            this._SQLServerIP = new()
             {
                 HostName = Dns.GetHostName(),
                 AddressList = [IPAddress.Loopback, IPAddress.IPv6Loopback]
             };
 
-            this.SQLServerPort = 1433;
+            this._SQLServerPort = 1433;
 
-            this.SQLServerInstance = string.Empty;
+            this._SQLServerInstance = string.Empty;
 
-            this.SQLServerLoginName = "sa";
+            this._SQLServerLoginName = "sa";
 
             this._SQLServerLoginPassword = new();
             this._SQLServerLoginPassword.MakeReadOnly();
+
+            this._ConnectRetryCount = 3;
+            this._ConnectRetryInterval = new(0, 0, 5);
+            this._ConnectTimeout = new(0, 0, 10);
         }
 
         #region Implementations
@@ -77,7 +82,87 @@ namespace Matrix.MsSql
 
         #endregion
 
+        #region CheckConnection
+
+        /// <summary>
+        /// Represents if the Sql-Connection is already tested.
+        /// </summary>
+        /// <remarks>Will be set to false, if any property of this class will be changed.</remarks>
+        private bool _CheckConnection = false;
+
+        /// <summary>
+        /// Checks if a connection to the SQL-Server can be established with the given parameters.
+        /// </summary>
+        /// <exception cref="InvalidOperationException">
+        /// Will be thrown, if no connection can be established to the SQL-Server.
+        /// Check, if all parameters are valid and try this method again.
+        /// </exception>
+        public void CheckConnection()
+        {
+            // Check bereits durchgeführt?
+            if (this._CheckConnection) { return; }
+
+            // Passwort gesetzt?
+            if (this._SQLServerLoginPassword.Length == 0)
+            {
+                throw new InvalidOperationException($"Property {nameof(this.SQLServerLoginPassword)} not set!");
+            }
+
+            // Mindestens 1 IP-Adresse verfügbar?
+            if (this.SQLServerIP.AddressList.Length == 0)
+            {
+                throw new InvalidOperationException($"The IP-Adress list in the Property {nameof(this.SQLServerIP)} is empty!");
+            }
+
+            // Verfügbare IP-Adresse durchtesten
+            foreach (var item in this._SQLServerIP.AddressList)
+            {
+                SqlConnectionStringBuilder builder = new()
+                {
+                    Authentication = SqlAuthenticationMethod.SqlPassword,
+                    ConnectRetryCount = 2,
+                    ConnectRetryInterval = 10,
+                    ConnectTimeout = 10,
+                    CommandTimeout = 10,
+                    DataSource = $"tcp:{item},{this._SQLServerPort}{(string.IsNullOrWhiteSpace(this._SQLServerInstance) ? "" : string.Concat("\\", this._SQLServerInstance))}",
+                    IPAddressPreference = SqlConnectionIPAddressPreference.IPv4First,
+                    IntegratedSecurity = false,
+                    PersistSecurityInfo = false,
+                    TrustServerCertificate = true
+                };
+
+                SqlCredential cred = new(this._SQLServerLoginName, this._SQLServerLoginPassword);
+
+                using SqlConnection SqlConn = new(builder.ConnectionString, cred);
+
+                try
+                {
+                    SqlConn.Open();
+
+                    // Verbindung zum SQL-Server konnte hergestellt werden.
+                    this._SQLServerIP.AddressList = [item];
+                    this._CheckConnection = true;
+                    break;
+                }
+                catch
+                {
+                    // Unter dieser IP-Adresse antwortet der SQL-Server nicht. Nächste Adresse versuchen.
+                    continue;
+                }
+            }
+
+            // Wenn bis hierhin keine IP-Adresse gültig war Fehlermeldung ausgeben
+            if (this._CheckConnection == false)
+            {
+                throw new InvalidOperationException("Failed to connect to the SQL-Server.");
+            }
+        }
+
+        #endregion
+
         #region SQLServerIP
+
+        private IPHostEntry _SQLServerIP;
 
         /// <summary>
         /// Gets or sets a DNS Host Entry of the SQL-Server.
@@ -88,7 +173,19 @@ namespace Matrix.MsSql
         /// <remarks>
         /// Use the methods <see cref="ParseSQLServerIP(string, bool)"/> or <see cref="TryParseSQLServerIP(string, bool)"/> to setup the IP-Adress.
         /// </remarks>
-        public IPHostEntry SQLServerIP { get; protected set; }
+        public IPHostEntry SQLServerIP
+        {
+            get => this._SQLServerIP;
+            protected set
+            {
+                // Wurde die IP-Adressliste geändert?
+                if (!value.AddressList.Equals(this._SQLServerIP.AddressList))
+                {
+                    this._CheckConnection = false;
+                }
+                this._SQLServerIP = value;
+            }
+        }
 
         /// <summary>
         /// Sets the IP-Adress of the SQL-Server.
@@ -175,12 +272,17 @@ namespace Matrix.MsSql
         /// <exception cref="ArgumentOutOfRangeException">The port number is not in the valid range.</exception>
         public int SQLServerPort
         {
-            get { return _SQLServerPort; }
+            get => this._SQLServerPort;
             set
             {
                 // Prüfen, ob die Portnummer innerhalb des gültigen Bereiches liegt.
                 if (value >= IPEndPoint.MinPort && value <= IPEndPoint.MaxPort)
                 {
+                    // Wurde die Port-Nummer geändert?
+                    if (!value.Equals(this._SQLServerPort))
+                    {
+                        this._CheckConnection = false;
+                    }
                     _SQLServerPort = value;
                 }
                 else
@@ -193,16 +295,32 @@ namespace Matrix.MsSql
         #endregion
 
         #region SQLServerInstance
-        
+
+        private string _SQLServerInstance;
+
         /// <summary>
         /// Gets or sets the name of the SQL-Server instance. This property is required only, if multiple instances are installed on the SQL-Server.
         /// </summary>
         /// <value>The name of the SQL-Server instance.</value>
-        public string SQLServerInstance { get; set; }
+        public string SQLServerInstance
+        {
+            get => this._SQLServerInstance;
+            set
+            {
+                // Wurde die Instanz geändert?
+                if (!value.Equals(this._SQLServerInstance))
+                {
+                    this._CheckConnection = false;
+                }
+                this._SQLServerInstance = value;
+            }
+        }
 
         #endregion
 
         #region SQLServerLoginName
+
+        private string _SQLServerLoginName;
 
         /// <summary>
         /// Gets or sets the login name for the connection with the SQL-Server.
@@ -215,7 +333,19 @@ namespace Matrix.MsSql
         /// Only the SQL-Server authentication mode is supported for login.
         /// The selected login name should have sufficient permissions on the SQL-Server.
         /// </remarks>
-        public string SQLServerLoginName { get; set; }
+        public string SQLServerLoginName
+        {
+            get => this._SQLServerLoginName;
+            set
+            {
+                // Login Namen geändert?
+                if (!value.Equals(this._SQLServerLoginName))
+                {
+                    this._CheckConnection = false;
+                }
+                this._SQLServerLoginName = value;
+            }
+        }
 
         #endregion
 
@@ -230,16 +360,96 @@ namespace Matrix.MsSql
         /// <exception cref="ArgumentException">Will be thrown if the login password is not marked as read-only.</exception>
         public SecureString SQLServerLoginPassword
         {
-            get { return _SQLServerLoginPassword; }
+            get => this.SQLServerLoginPassword;
             set
             {
                 if (value.IsReadOnly())
                 {
                     _SQLServerLoginPassword = value;
+                    this._CheckConnection = false;
                 }
                 else
                 {
                     throw new ArgumentException("The login password must be marked as read-only!");
+                }
+            }
+        }
+
+        #endregion
+
+        #region ConnectionFailureParameters
+
+        private int _ConnectRetryCount;
+
+        /// <summary>
+        /// The number of reconnections attempted after identifying that there was an idle connection failure.
+        /// This must be an integer between 0 and 255.
+        /// Default value is 3.
+        /// </summary>
+        /// <value>Number of retry connections.</value>
+        /// <exception cref="ArgumentException">The number must be between 0 and 255.</exception>
+        public int ConnectRetryCount
+        {
+            get => this._ConnectRetryCount;
+            set
+            {
+                if (value < 0 || value > 255)
+                {
+                    throw new ArgumentException($"The value of the {nameof(this.ConnectRetryCount)} must be between 0 and 255.");
+                }
+                else
+                {
+                    // Eine Änderung dieses Parameters erfordert nicht die erneute Prüfung, ob die Verbindung noch gültig ist.
+                    this._ConnectRetryCount = value;
+                }
+            }
+        }
+
+        private TimeSpan _ConnectRetryInterval;
+
+        /// <summary>
+        /// Amount of time between each reconnection attempt after identifying that there was an idle connection failure.
+        /// This must be a timespan between 1 and 60 seconds. The default is 5 seconds.
+        /// </summary>
+        /// <value>Amount of time (in seconds) between each reconnection attempt after identifying that there was an idle connection failure.</value>
+        /// <exception cref="ArgumentException">The time span must be between 1 and 60 seconds.</exception>
+        public TimeSpan ConnectRetryInterval
+        {
+            get => this._ConnectRetryInterval;
+            set
+            {
+                if (Math.Floor(value.TotalSeconds) < 1 || Math.Ceiling(value.TotalSeconds) > 60)
+                {
+                    throw new ArgumentException($"The value of the {nameof(this.ConnectRetryInterval)} must be between 1 and 60 seconds.");
+                }
+                else
+                {
+                    // Eine Änderung dieses Parameters erfordert nicht die erneute Prüfung, ob die Verbindung noch gültig ist.
+                    this._ConnectRetryInterval = value;
+                }
+            }
+        }
+
+        private TimeSpan _ConnectTimeout;
+
+        /// <summary>
+        /// Gets or sets the length of time (in seconds) to wait for a connection to the server before terminating the attempt and generating an error.
+        /// </summary>
+        /// <value>The timespan to wait for a connection. The default value is 10 seconds.</value>
+        /// <exception cref="ArgumentException">The time span must be greater than 1 second.</exception>
+        public TimeSpan ConnectTimeout
+        {
+            get => this._ConnectTimeout;
+            set
+            {
+                if (Math.Floor(value.TotalSeconds) < 1)
+                {
+                    throw new ArgumentException($"The value of the {nameof(this.ConnectTimeout)} must be greater than 1 second.");
+                }
+                else
+                {
+                    // Eine Änderung dieses Parameters erfordert nicht die erneute Prüfung, ob die Verbindung noch gültig ist.
+                    this._ConnectTimeout = value;
                 }
             }
         }

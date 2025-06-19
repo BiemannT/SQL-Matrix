@@ -100,6 +100,7 @@ namespace Matrix.MsSql.Unit
         /// Requests on the console the necessary information to setup the SQL-Server connection.
         /// </summary>
         /// <returns>Returns an instance of <see cref="SetupSqlConnection"/> with the gathered information.</returns>
+        /// <exception cref="InvalidOperationException">Will be thrown if it is not possible to establish a connection to the SQL-Server with the given parameters.</exception>
         private static SetupSqlConnection PrepareSqlConnetion ()
         {
             SetupSqlConnection SqlConn = new();
@@ -231,6 +232,16 @@ namespace Matrix.MsSql.Unit
             SqlConn.SQLServerLoginPassword = secure;
             Console.Write(Environment.NewLine);
             #endregion
+
+            // Test the connection
+            try
+            {
+                SqlConn.CheckConnection();
+            }
+            catch (InvalidOperationException)
+            {
+                throw;
+            }
 
             return SqlConn;
         }

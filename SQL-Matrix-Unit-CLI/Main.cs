@@ -37,8 +37,6 @@ namespace Matrix.MsSql.Unit
         static void Main(string[] args)
         {
             TestDefinition Definition;
-            SqlCredential SqlCredential;
-            SqlConnectionStringBuilder SqlConnBuilder;
             SetupSqlConnection SqlConn;
 
             // Trigger für den Abbruch
@@ -62,46 +60,18 @@ namespace Matrix.MsSql.Unit
             }
 
             // Verbindung zum SQL-Server herstellen
-            Console.WriteLine("Setup SQL-Connection");
-            SqlConn = PrepareSqlConnetion();
-
-            // SQL-Connection aufbereiten
-            SqlCredential = new(SqlConn.SQLServerLoginName, SqlConn.SQLServerLoginPassword);
-            SqlConnBuilder = new()
+            try
             {
-                Authentication = SqlAuthenticationMethod.SqlPassword,
-                ConnectRetryCount = 3,
-                ConnectRetryInterval = 5,
-                ConnectTimeout = 10,
-                DataSource = $"tcp:{SqlConn.SQLServerIP.AddressList[0]},{SqlConn.SQLServerPort}{(string.IsNullOrWhiteSpace(SqlConn.SQLServerInstance) ? "" : string.Concat("\\", SqlConn.SQLServerInstance))}",
-                IPAddressPreference = SqlConnectionIPAddressPreference.IPv4First,
-                IntegratedSecurity = false,
-                PersistSecurityInfo = false,
-                TrustServerCertificate = true
-            };
-
-            Definition.SqlConn = new(SqlConnBuilder.ConnectionString, SqlCredential);
-            using (Definition.SqlConn)
-            {
-                string TestConnCmd = "SELECT GETDATE();";
-                SqlCommand cmd = new(TestConnCmd, Definition.SqlConn)
-                {
-                    CommandTimeout = 10
-                };
-
-                try
-                {
-                    cmd.Connection.Open();
-                    cmd.ExecuteNonQuery();
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine("WARNING: Failed to connect to the SQL-Server!");
-                    Console.WriteLine(ex.Message);
-                    Environment.Exit(3);
-                }
+                Console.WriteLine("Setup SQL-Connection");
+                SqlConn = PrepareSqlConnetion();
+                Console.WriteLine($"Connection to the SQL-Server {SqlConn.SQLServerIP.HostName} established successfully.");
             }
-            Console.WriteLine($"Connection to the SQL-Server {SqlConn.SQLServerIP.HostName} established successfully.");
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                Environment.Exit(3);
+                return;
+            }
 
             // Dateinamen der DACPAC-Datei abfragen.
             string DacFileName;
