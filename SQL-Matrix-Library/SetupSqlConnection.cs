@@ -105,7 +105,7 @@ namespace Matrix.MsSql
             if (this._CheckConnection) { return; }
 
             // Passwort gesetzt?
-            if (this._SQLServerLoginPassword.Length == 0)
+            if (this.SQLServerLoginPassword.Length == 0)
             {
                 throw new InvalidOperationException($"Property {nameof(this.SQLServerLoginPassword)} not set!");
             }
@@ -117,7 +117,7 @@ namespace Matrix.MsSql
             }
 
             // Verfügbare IP-Adresse durchtesten
-            foreach (var item in this._SQLServerIP.AddressList)
+            foreach (var item in this.SQLServerIP.AddressList)
             {
                 SqlConnectionStringBuilder builder = new()
                 {
@@ -126,15 +126,15 @@ namespace Matrix.MsSql
                     ConnectRetryInterval = 10,
                     ConnectTimeout = 10,
                     CommandTimeout = 10,
-                    DataSource = $"tcp:{item},{this._SQLServerPort}{(string.IsNullOrWhiteSpace(this._SQLServerInstance) ? "" : string.Concat("\\", this._SQLServerInstance))}",
-                    InitialCatalog = this._Database,
+                    DataSource = $"tcp:{item},{this.SQLServerPort}{(string.IsNullOrWhiteSpace(this.SQLServerInstance) ? "" : string.Concat("\\", this.SQLServerInstance))}",
+                    InitialCatalog = this.Database,
                     IPAddressPreference = SqlConnectionIPAddressPreference.IPv4First,
                     IntegratedSecurity = false,
                     PersistSecurityInfo = false,
                     TrustServerCertificate = true
                 };
 
-                SqlCredential cred = new(this._SQLServerLoginName, this._SQLServerLoginPassword);
+                SqlCredential cred = new(this.SQLServerLoginName, this.SQLServerLoginPassword);
 
                 using SqlConnection SqlConn = new(builder.ConnectionString, cred);
 
