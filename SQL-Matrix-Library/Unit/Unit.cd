@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
+  <Class Name="Matrix.MsSql.Unit.TestInput">
+    <Position X="5" Y="0.5" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAIAAAEAAAABAABAAAAAAAAAAAAE=</HashCode>
+      <FileName>Unit\TestInput.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Matrix.MsSql.Unit.TestDefinition">
+    <Position X="0.5" Y="0.5" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAIAAAAIAEAAAAAQIAAAAAgBAUAA=</HashCode>
+      <FileName>Unit\TestDefinition.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Enum Name="Matrix.MsSql.Unit.TestObjectTypeEnum">
+    <Position X="0.5" Y="5.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AACAAAAAAAAAAAAAAAAAAAAAAAAAAAABEAAAAAEAAAA=</HashCode>
+      <FileName>Unit\TestObjectTypeEnum.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Matrix.MsSql.Unit.ApiVersionEnum">
+    <Position X="2.75" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAEAAAA=</HashCode>
+      <FileName>Unit\ApiVersionEnum.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Matrix.MsSql.Unit.KeepDatabaseEnum">
+    <Position X="4.5" Y="5.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAQAAAAQAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAA=</HashCode>
+      <FileName>Unit\KeepDatabaseEnum.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
