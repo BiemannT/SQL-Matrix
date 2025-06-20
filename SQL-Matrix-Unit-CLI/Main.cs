@@ -32,12 +32,16 @@ namespace Matrix.MsSql.Unit
         ///             <description>3</description>
         ///             <description>Error during SQL connections.</description>
         ///         </item>
+        ///         <item>
+        ///             <description>4</description>
+        ///             <description>Error during publishing dacpac-file.</description>
+        ///         </item>
         ///     </list>
         /// </remarks>
         static void Main(string[] args)
         {
             TestDefinition Definition;
-            SetupSqlConnection SqlConn;
+            SetupDacService SqlConn;
 
             // Trigger für den Abbruch
             Console.CancelKeyPress += Console_CancelKeyPress;
@@ -73,65 +77,30 @@ namespace Matrix.MsSql.Unit
                 return;
             }
 
-            // Dateinamen der DACPAC-Datei abfragen.
-            string DacFileName;
-            do
+            // DACPAC-Datei laden und auf dem SQL-Server veröffentlichen
+            try
             {
-                Console.WriteLine("Enter the filename of the DACPAC-package file:");
-                DacFileName = Console.ReadLine() ?? string.Empty;
-
-                // Datei angegeben?
-                if (string.IsNullOrWhiteSpace(DacFileName))
-                {
-                    Console.WriteLine("No input. Try again.");
-                    continue;
-                }
-
-                // Existiert die Datei?
-                if (!File.Exists(DacFileName.Trim('"').ToString()))
-                {
-                    Console.WriteLine("File does not exist. Try again.");
-                    continue;
-                }
-                else
-                {
-                    // Versuche Datei Infos abzufragen
-                    try
-                    {
-                        Definition.DacpacFile = new(DacFileName.Trim('"').ToString());
-                    }
-                    catch (SecurityException ex)
-                    {
-                        Console.WriteLine("WARNING: Access to the dacpac file denied! Try again.");
-                        Console.WriteLine(ex.Message);
-                        continue;
-                    }
-                    catch (UnauthorizedAccessException ex)
-                    {
-                        Console.WriteLine("WARNING: Access to the dacpac file denied! Try again.");
-                        Console.WriteLine(ex.Message);
-                        continue;
-                    }
-                    catch (PathTooLongException ex)
-                    {
-                        Console.WriteLine("WARNING: Full path name to the dacpac file too long!");
-                        Console.WriteLine(ex.Message);
-                        continue;
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine(ex.Message);
-                        continue;
-                    }
-
-                    // Datei vorhanden und lesbar
-                    break;
-                }
+                PrepareDacServices(ref SqlConn);
+                Console.WriteLine("Setup test-database on the SQL-Server.");
+                SqlConn.ProgressMessage += SqlConn_ProgressMessage;
+                SqlConn.PublishDacPackage(string.Concat(SqlConn.DacName, " test"));
+                Console.WriteLine($"Database {SqlConn.Database} published successsfully.");
             }
-            while (true);
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                Environment.Exit(4);
+                return;
+            }
 
             SqlConn.Dispose();
             Console.ReadLine();
+        }
+
+        private static void SqlConn_ProgressMessage(object sender, DacPublishEventArgs e)
+        {
+            // Dacpac Veröffentlichung protokollieren
+            Console.WriteLine(e.ToString());
         }
 
         private static void Console_CancelKeyPress(object? sender, ConsoleCancelEventArgs e)
