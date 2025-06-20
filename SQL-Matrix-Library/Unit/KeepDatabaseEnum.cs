@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Matrix.MsSql.Unit
+﻿namespace Matrix.MsSql.Unit
 {
     /// <summary>
     /// Represents the instruction, if the database sould be kept after the complete test run.
