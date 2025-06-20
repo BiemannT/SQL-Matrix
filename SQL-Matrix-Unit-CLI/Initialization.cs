@@ -99,11 +99,11 @@ namespace Matrix.MsSql.Unit
         /// <summary>
         /// Requests on the console the necessary information to setup the SQL-Server connection.
         /// </summary>
-        /// <returns>Returns an instance of <see cref="SetupSqlConnection"/> with the gathered information.</returns>
+        /// <returns>Returns an instance of <see cref="SetupDacService"/> with the gathered information.</returns>
         /// <exception cref="InvalidOperationException">Will be thrown if it is not possible to establish a connection to the SQL-Server with the given parameters.</exception>
-        private static SetupSqlConnection PrepareSqlConnetion ()
+        private static SetupDacService PrepareSqlConnetion ()
         {
-            SetupSqlConnection SqlConn = new();
+            SetupDacService SqlConn = new();
             string input;
 
             #region Server name
@@ -244,6 +244,59 @@ namespace Matrix.MsSql.Unit
             }
 
             return SqlConn;
+        }
+
+        private static void PrepareDacServices (ref SetupDacService sqlSetup)
+        {
+            string input;
+
+            // Dacpac-Datei abfragen und validieren
+            do
+            {
+                Console.WriteLine("Enter the filename of the DACPAC-package file:");
+                input = Console.ReadLine() ?? string.Empty;
+
+                if (string.IsNullOrWhiteSpace(input))
+                {
+                    Console.WriteLine("No input. Try again.");
+                    continue;
+                }
+                else
+                {
+                    // Datei laden
+                    try
+                    {
+                        sqlSetup.DacFile = new(input.Trim('"').ToString());
+                    }
+                    catch (SecurityException)
+                    {
+                        Console.WriteLine("WARNING: Access to the dacpac file denied!. Try again.");
+                        continue;
+                    }
+                    catch (UnauthorizedAccessException)
+                    {
+                        Console.WriteLine("WARNING: Access to the dacpac file denied! Try again.");
+                        continue;
+                    }
+                    catch (PathTooLongException)
+                    {
+                        Console.WriteLine("WARNING: Full path name to the dacpac file too long!");
+                        continue;
+                    }
+                    catch (InvalidOperationException ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                        continue;
+                    }
+                    catch
+                    {
+                        throw;
+                    }
+
+                    Console.WriteLine($"DACPAC-Package {sqlSetup.DacName} loaded.");
+                    break;
+                }
+            } while (true);
         }
     }
 }
