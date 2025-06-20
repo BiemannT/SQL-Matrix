@@ -16,14 +16,13 @@ namespace Matrix.MsSql.Unit
         public TestDefinition()
         {
             // Initialize the class with default values.
-            ApiVersion = ApiVersion.None;
+            ApiVersion = ApiVersionEnum.None;
             TestObjectType = TestObjectTypeEnum.None;
             SchemaName = string.Empty;
             TestObjectName = string.Empty;
             MaxExecutionTime = 1;
             Inputs = [];
             FileName = new("test.json");
-            SqlConn = new();
             DropDatabaseBeforePublish = false;
             KeepDatabase = KeepDatabaseEnum.DropAlways;
         }
@@ -35,7 +34,7 @@ namespace Matrix.MsSql.Unit
         [JsonPropertyName("SQL-Matrix-Api-Version")]
         [JsonPropertyOrder(-10)]
         [JsonRequired]
-        public ApiVersion ApiVersion { get; set; }
+        public ApiVersionEnum ApiVersion { get; set; }
 
         /// <summary>
         /// Gets or sets the type of the tested object.
@@ -87,38 +86,15 @@ namespace Matrix.MsSql.Unit
         public FileInfo FileName { get; set; }
 
         /// <summary>
-        /// Gets or sets the connection to the Test SQL-Server.
-        /// </summary>
-        /// <remarks>
-        /// The selected User login should have enough permissions to execute the test for the selected test object.
-        /// In case of using a dacpac-file the selected User login should have the permission to create a database.
-        /// </remarks>
-        [JsonIgnore]
-        public SqlConnection SqlConn { get; set; }
-
-        /// <summary>
-        /// Gets or sets the dacpac-file to be used for this test.
-        /// The database will be published to the SQL-Server in advance of the test.
-        /// </summary>
-        /// <remarks>
-        /// If a dacpac file is set, the databse property inside the <see cref="SqlConn"/>-property will be replaced.
-        /// The name of the new database will be the application name of the dacpac plus '-test'.
-        /// It is recommended to perform the test under an empty and clean database, by using a dacpac-package.
-        /// If the property <see cref="DropDatabaseBeforePublish"/> is set to <c>true</c>, the database will be published new again in advance of each test run.
-        /// </remarks>
-        [JsonIgnore]
-        public FileInfo? DacpacFile { get; set; }
-
-        /// <summary>
         /// <para>
         /// Gets or sets the instruction for dropping the database before publishing the dacpac-file to the SQL-Server,
         /// if already the test database exists.
         /// </para>
         /// <para>
-        /// Set <c>true</c>, if the database should be dropped first before each test run and then a clean database will be published.
-        /// Set <c>false</c>, if the existing database should be reused for this test.
+        /// Set <see langword="true"/>, if the database should be dropped first before each test run and then a clean database will be published.
+        /// Set <see langword="false"/>, if the existing database should be reused for this test.
         /// In this case an update from the dacpac-file will be performed.
-        /// The default value is <c>false</c>.
+        /// The default value is <see langword="false"/>.
         /// </para>
         /// </summary>
         /// <remarks>
@@ -128,13 +104,11 @@ namespace Matrix.MsSql.Unit
         public bool DropDatabaseBeforePublish { get; set; }
 
         /// <summary>
-        /// <para>
         /// Gets or sets the instruction, if the database should be kept after the test run is finished or failed.
-        /// </para>
-        /// <para>
-        /// The default value is <see cref="KeepDatabaseEnum.DropAlways"/>.
-        /// </para>
         /// </summary>
+        /// <value>
+        /// The default value is <see cref="KeepDatabaseEnum.DropAlways"/>.
+        /// </value>
         /// <remarks>
         /// This property will be affected only, if a <see cref="DacpacFile"/> is set.
         /// </remarks>
