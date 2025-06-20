@@ -1,16 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace Matrix.MsSql.Unit
 {
     /// <summary>
     /// Represents the necessary API version of this test file.
     /// </summary>
-    [JsonConverter(typeof(JsonStringEnumConverter<ApiVersion>))]
-    public enum ApiVersion
+    [JsonConverter(typeof(JsonStringEnumConverter<ApiVersionEnum>))]
+    public enum ApiVersionEnum
     {
         /// <summary>
         /// Not identified.
