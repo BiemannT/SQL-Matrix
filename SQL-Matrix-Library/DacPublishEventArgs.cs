@@ -11,12 +11,12 @@
         /// <summary>
         /// Gets the message from the SQL DAC-Service.
         /// </summary>
-        public string Message { get; private set; } = message;
+        public string Message { get; } = message;
 
         /// <summary>
         /// Gets the type of the current message.
         /// </summary>
-        public DacPublishMessageTypeEnum MessageType { get; private set; } = messageType;
+        public DacPublishMessageTypeEnum MessageType { get; } = messageType;
 
         /// <summary>
         /// Returns all the information of this instance in one line.
