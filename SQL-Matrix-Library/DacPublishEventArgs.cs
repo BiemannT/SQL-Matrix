@@ -24,7 +24,7 @@
         /// <returns>Returns all the information of this instance in one line.</returns>
         public override string ToString()
         {
-            return string.Concat(MessageType.ToString()[..2].ToUpper(), ": ", Message);
+            return string.Concat(MessageType.ToString()[..4].ToUpper(), ": ", Message);
         }
     }
 }
