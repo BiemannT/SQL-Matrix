@@ -23,8 +23,6 @@ namespace Matrix.MsSql.Unit
             MaxExecutionTime = 1;
             Inputs = [];
             FileName = new("test.json");
-            DropDatabaseBeforePublish = false;
-            KeepDatabase = KeepDatabaseEnum.DropAlways;
         }
 
         /// <summary>
@@ -84,35 +82,5 @@ namespace Matrix.MsSql.Unit
         /// <remarks>The default name is "test.json" located in the current working directory.</remarks>
         [JsonIgnore]
         public FileInfo FileName { get; set; }
-
-        /// <summary>
-        /// <para>
-        /// Gets or sets the instruction for dropping the database before publishing the dacpac-file to the SQL-Server,
-        /// if already the test database exists.
-        /// </para>
-        /// <para>
-        /// Set <see langword="true"/>, if the database should be dropped first before each test run and then a clean database will be published.
-        /// Set <see langword="false"/>, if the existing database should be reused for this test.
-        /// In this case an update from the dacpac-file will be performed.
-        /// The default value is <see langword="false"/>.
-        /// </para>
-        /// </summary>
-        /// <remarks>
-        /// This property will be affected only, if a <see cref="DacpacFile"/> is set.
-        /// </remarks>
-        [JsonIgnore]
-        public bool DropDatabaseBeforePublish { get; set; }
-
-        /// <summary>
-        /// Gets or sets the instruction, if the database should be kept after the test run is finished or failed.
-        /// </summary>
-        /// <value>
-        /// The default value is <see cref="KeepDatabaseEnum.DropAlways"/>.
-        /// </value>
-        /// <remarks>
-        /// This property will be affected only, if a <see cref="DacpacFile"/> is set.
-        /// </remarks>
-        [JsonIgnore]
-        public KeepDatabaseEnum KeepDatabase { get; set; }
     }
 }
