@@ -3,7 +3,7 @@
     /// <summary>
     /// Represents the instruction, if the database sould be kept after the complete test run.
     /// </summary>
-    public enum KeepDatabaseEnum
+    public enum KeepDatabaseAfterTestEnum
     {
         /// <summary>
         /// Drops the test databse after the test run in any case.
