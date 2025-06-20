@@ -8,7 +8,7 @@ namespace Matrix.MsSql
     /// This class provides properties and methods to setup a SQL-Server connection intended for the use of the SQL-Matrix-Library.
     /// </summary>
     /// <remarks>
-    /// This class encapsulate the essential properties of the Microsoft.Data.SqlClient library.
+    /// This class encapsulate the essential properties of the <see cref="Microsoft.Data.SqlClient"/> library.
     /// </remarks>
     public class SetupSqlConnection : IDisposable
     {
@@ -363,12 +363,12 @@ namespace Matrix.MsSql
         /// <exception cref="ArgumentException">Will be thrown if the login password is not marked as read-only.</exception>
         public SecureString SQLServerLoginPassword
         {
-            get => this.SQLServerLoginPassword;
+            get => this._SQLServerLoginPassword;
             set
             {
                 if (value.IsReadOnly())
                 {
-                    _SQLServerLoginPassword = value;
+                    this._SQLServerLoginPassword = value;
                     this._CheckConnection = false;
                 }
                 else
@@ -511,10 +511,10 @@ namespace Matrix.MsSql
             return new SqlConnectionStringBuilder()
             {
                 Authentication = SqlAuthenticationMethod.SqlPassword,
-                ConnectRetryCount = this._ConnectRetryCount,
-                ConnectRetryInterval = (int)this._ConnectRetryInterval.TotalSeconds,
-                ConnectTimeout = (int)this._ConnectTimeout.TotalSeconds,
-                DataSource = $"tcp:{this._SQLServerIP.AddressList[0]},{this._SQLServerPort}{(string.IsNullOrWhiteSpace(this._SQLServerInstance) ? "" : string.Concat("\\", this._SQLServerInstance))}",
+                ConnectRetryCount = this.ConnectRetryCount,
+                ConnectRetryInterval = (int)this.ConnectRetryInterval.TotalSeconds,
+                ConnectTimeout = (int)this.ConnectTimeout.TotalSeconds,
+                DataSource = $"tcp:{this.SQLServerIP.AddressList[0]},{this.SQLServerPort}{(string.IsNullOrWhiteSpace(this.SQLServerInstance) ? "" : string.Concat("\\", this.SQLServerInstance))}",
                 InitialCatalog = _Database,
                 IPAddressPreference = SqlConnectionIPAddressPreference.IPv4First,
                 IntegratedSecurity = false,
