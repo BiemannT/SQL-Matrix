@@ -1,38 +1,124 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
   <Class Name="Matrix.MsSql.Unit.TestInput">
-    <Position X="5" Y="0.5" Width="3.5" />
+    <Position X="9.5" Y="0.75" Width="3.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAIAAAEAAAABAABAAAAAAAAAAAAE=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAIAAAEAAEABAABAAAAAAAAAAAAE=</HashCode>
       <FileName>Unit\TestInput.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Matrix.MsSql.Unit.TestDefinition">
-    <Position X="0.5" Y="0.5" Width="3.5" />
+    <Position X="5" Y="0.75" Width="3.5" />
+    <AssociationLine Name="ApiVersion" Type="Matrix.MsSql.Unit.ApiVersionEnum" FixedToPoint="true">
+      <Path>
+        <Point X="5.5" Y="2.882" />
+        <Point X="5.5" Y="5.25" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true" ManuallySized="true">
+        <Position X="-1.078" Y="1.373" Height="0.182" Width="0.983" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="TestObjectType" Type="Matrix.MsSql.Unit.TestObjectTypeEnum" FixedToPoint="true">
+      <Path>
+        <Point X="7.25" Y="2.882" />
+        <Point X="7.25" Y="5.25" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-1.265" Y="1.331" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="Inputs" Type="Matrix.MsSql.Unit.TestInput" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="7.5" Y="0.75" />
+        <Point X="7.5" Y="0.375" />
+        <Point X="10.188" Y="0.375" />
+        <Point X="10.188" Y="0.75" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.925" Y="0.12" />
+      </MemberNameLabel>
+    </AssociationLine>
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAIAAAAIAEAAAAAQIAAAAAgBAUAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAIAEAAAAAQIAAAAAABAUAA=</HashCode>
       <FileName>Unit\TestDefinition.cs</FileName>
     </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="ApiVersion" />
+      <Property Name="TestObjectType" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="Inputs" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="Matrix.MsSql.Unit.UnitTests">
+    <Position X="0.5" Y="0.75" Width="4" />
+    <AssociationLine Name="TestDefinitions" Type="Matrix.MsSql.Unit.TestDefinition" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="2.5" Y="0.75" />
+        <Point X="2.5" Y="0.375" />
+        <Point X="5.562" Y="0.375" />
+        <Point X="5.562" Y="0.75" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true" ManuallySized="true">
+        <Position X="0.56" Y="0.12" Height="0.182" Width="2.424" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="DropDatabaseBeforeTest" Type="Matrix.MsSql.DropDatabaseBeforeTestEnum" FixedToPoint="true">
+      <Path>
+        <Point X="0.812" Y="3.334" />
+        <Point X="0.812" Y="5.25" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true" ManuallySized="true">
+        <Position X="-1.838" Y="1.352" Height="0.182" Width="1.712" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="KeepDatabaseAfterTest" Type="Matrix.MsSql.Unit.KeepDatabaseAfterTestEnum" FixedToPoint="true">
+      <Path>
+        <Point X="3.188" Y="3.334" />
+        <Point X="3.188" Y="5.25" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true" ManuallySized="true">
+        <Position X="-1.682" Y="1.383" Height="0.182" Width="1.579" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AgAAAAAAAAAAAAIAAAAAAAIAAAECAAFAAAAAAAAAAAE=</HashCode>
+      <FileName>Unit\UnitTests.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="DropDatabaseBeforeTest" />
+      <Property Name="KeepDatabaseAfterTest" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="TestDefinitions" />
+    </ShowAsCollectionAssociation>
   </Class>
   <Enum Name="Matrix.MsSql.Unit.TestObjectTypeEnum">
-    <Position X="0.5" Y="5.25" Width="2" />
+    <Position X="7" Y="5.25" Width="2" />
     <TypeIdentifier>
       <HashCode>AACAAAAAAAAAAAAAAAAAAAAAAAAAAAABEAAAAAEAAAA=</HashCode>
       <FileName>Unit\TestObjectTypeEnum.cs</FileName>
     </TypeIdentifier>
   </Enum>
   <Enum Name="Matrix.MsSql.Unit.ApiVersionEnum">
-    <Position X="2.75" Y="5.25" Width="1.5" />
+    <Position X="5.25" Y="5.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAEAAAA=</HashCode>
       <FileName>Unit\ApiVersionEnum.cs</FileName>
     </TypeIdentifier>
   </Enum>
-  <Enum Name="Matrix.MsSql.Unit.KeepDatabaseEnum">
-    <Position X="4.5" Y="5.25" Width="2" />
+  <Enum Name="Matrix.MsSql.Unit.KeepDatabaseAfterTestEnum">
+    <Position X="3" Y="5.25" Width="2" />
     <TypeIdentifier>
       <HashCode>AAAAAQAAAAQAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAA=</HashCode>
-      <FileName>Unit\KeepDatabaseEnum.cs</FileName>
+      <FileName>Unit\KeepDatabaseAfterTestEnum.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Matrix.MsSql.DropDatabaseBeforeTestEnum">
+    <Position X="0.5" Y="5.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAgAgAAAIAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DropDatabaseBeforeTestEnum.cs</FileName>
     </TypeIdentifier>
   </Enum>
   <Font Name="Segoe UI" Size="9" />
