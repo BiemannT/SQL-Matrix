@@ -36,6 +36,11 @@
         RequiredDataTableFailed = 12,
 
         /// <summary>
+        /// The test object [SchemaName].[TestObjectName] does not exist on the database. Test run not possible.
+        /// </summary>
+        TestObjectNotExist = 13,
+
+        /// <summary>
         /// The test case was executed successfully. The actual result is equal to the expected result.
         /// </summary>
         TestSuccessful = 100,
@@ -48,6 +53,6 @@
         /// <summary>
         /// The execution of this test case was stopped due to the allowed command timeout.
         /// </summary>
-        TestTimeout = 102
+        TestTimeout = 102,
     }
 }
