@@ -302,5 +302,24 @@ namespace Matrix.MsSql.Unit
 
             return retValues;
         }
+
+        /// <summary>
+        /// Represents built-in test values for the type <see cref="SqlDbType.Int"/>.
+        /// </summary>
+        /// <param name="size">Not required for this type.</param>
+        /// <param name="precision">Not required for this type.</param>
+        /// <param name="scale">Not required for this type.</param>
+        /// <returns>Returns an array with test values.</returns>
+        public static Array BuiltinInt (int size = 0, byte precision = 0, byte scale = 0)
+        {
+            _ = size;
+            _ = precision;
+            _ = scale;
+            Int32[] retValues;
+
+            retValues = [-2147483648, 0, 2147483647];
+
+            return retValues;
+        }
     }
 }
