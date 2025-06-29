@@ -321,5 +321,24 @@ namespace Matrix.MsSql.Unit
 
             return retValues;
         }
+
+        /// <summary>
+        /// Represents built-in test values for the type <see cref="SqlDbType.BigInt"/>.
+        /// </summary>
+        /// <param name="size">Not required for this type.</param>
+        /// <param name="precision">Not required for this type.</param>
+        /// <param name="scale">Not required for this type.</param>
+        /// <returns>Returns an array with test values.</returns>
+        public static Array BuiltinBigInt (int size = 0, byte precision = 0, byte scale = 0)
+        {
+            _ = size;
+            _ = precision;
+            _ = scale;
+            Int64[] retValues;
+
+            retValues = [-9223372036854775808, 0, 9223372036854775807];
+
+            return retValues;
+        }
     }
 }
