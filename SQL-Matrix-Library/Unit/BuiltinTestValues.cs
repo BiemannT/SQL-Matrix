@@ -245,5 +245,24 @@ namespace Matrix.MsSql.Unit
 
             return retValues;
         }
+
+        /// <summary>
+        /// Represents built-in test values for the type <see cref="SqlDbType.Bit"/>.
+        /// </summary>
+        /// <param name="size">Not required for this type.</param>
+        /// <param name="precision">Not required for this type.</param>
+        /// <param name="scale">Not required for this type.</param>
+        /// <returns>Returns an array with test values.</returns>
+        public static Array BuiltinBit (int size = 0, byte precision = 0, byte scale = 0)
+        {
+            _ = size;
+            _ = precision;
+            _ = scale;
+            Boolean[] retValues;
+
+            retValues = [false, true];
+
+            return retValues;
+        }
     }
 }
