@@ -378,5 +378,55 @@ namespace Matrix.MsSql.Unit
 
             return retValues;
         }
+
+        /// <summary>
+        /// Represents built-in test values for the type <see cref="SqlDbType.Decimal"/>.
+        /// </summary>
+        /// <param name="size">Not required for this type.</param>
+        /// <param name="precision">The precision of the type from 1 through 38. Set 0 for the default value 18.</param>
+        /// <param name="scale">The scale for the type from 0 until the value of <paramref name="precision"/>. Set 0 for the default value 0.</param>
+        /// <returns>Returns an array with test values.</returns>
+        /// <exception cref="ArgumentOutOfRangeException">Will be thrown if <paramref name="precision"/> is not between 1 and 38 - or - <paramref name="scale"/> is not between 0 and <paramref name="precision"/>.</exception>
+        public static Array BuiltinDecimal (int size = 0, byte precision = 18, byte scale = 0)
+        {
+            _ = size;
+            decimal[] retValues;
+
+            if (precision == 0)
+            {
+                // Default Value = 18
+
+                if (scale == 0)
+                {
+                    // Default Value = 0
+                    retValues = [0];
+                    // TODO: Werte definieren
+                }
+                else if (scale > 18)
+                {
+                    throw new ArgumentOutOfRangeException(nameof(scale), "The scale must be a value between 0 and the value of precision.");
+                }
+                else
+                {
+                    retValues = [0];
+                    // TODO: Werte definieren
+                }
+            }
+            else if (precision < 1 || precision > 38)
+            {
+                throw new ArgumentOutOfRangeException(nameof(precision), "The precision must be a value from 1 through 38.");
+            }
+            else if (scale < 0 || scale > precision)
+            {
+                throw new ArgumentOutOfRangeException(nameof(scale), "The scale must be a value between 0 and the value of precision.");
+            }
+            else
+            {
+                retValues = [0];
+                // TODO: Werte definieren
+            }
+
+            return retValues;
+        }
     }
 }
