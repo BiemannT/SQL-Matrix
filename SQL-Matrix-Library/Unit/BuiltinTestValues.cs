@@ -340,5 +340,24 @@ namespace Matrix.MsSql.Unit
 
             return retValues;
         }
+
+        /// <summary>
+        /// Represents built-in test values for the type <see cref="SqlDbType.SmallMoney"/>.
+        /// </summary>
+        /// <param name="size">Not required for this type.</param>
+        /// <param name="precision">Not required for this type.</param>
+        /// <param name="scale">Not required for this type.</param>
+        /// <returns>Returns an array with test values.</returns>
+        public static Array BuiltinSmallmoney (int size = 0, byte precision = 0, byte scale = 0)
+        {
+            _ = size;
+            _ = precision;
+            _ = scale;
+            decimal[] retValues;
+
+            retValues = [-214748.3648m, 0, 0.0001m, 214748.3647m];
+
+            return retValues;
+        }
     }
 }
