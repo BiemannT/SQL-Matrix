@@ -20,7 +20,7 @@ namespace Matrix.MsSql.Unit
         /// <param name="scale">Not required for this type.</param>
         /// <returns>Returns an array with test values.</returns>
         /// <exception cref="ArgumentOutOfRangeException">Will be thrown if <paramref name="size"/> is not between 1 and 8000 or 0.</exception>
-        public static Array BuiltinBinary (int size, byte precision, byte scale)
+        public static Array BuiltinBinary (int size, byte precision = 0, byte scale = 0)
         {
             _ = precision;
             _ = scale;
