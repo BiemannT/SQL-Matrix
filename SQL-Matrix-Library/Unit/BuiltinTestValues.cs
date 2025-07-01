@@ -588,5 +588,46 @@ namespace Matrix.MsSql.Unit
 
             return retValues;
         }
+
+        /// <summary>
+        /// Represents built-in test values for the type <see cref="SqlDbType.DateTime2"/>.
+        /// </summary>
+        /// <param name="size">Not required for this type.</param>
+        /// <param name="precision">Not required for this type.</param>
+        /// <param name="scale">The fractional second scale of the type from 0 through 7. Set 0 for the default value 7.</param>
+        /// <returns>Returns an array with test values.</returns>
+        /// <exception cref="ArgumentOutOfRangeException">Will be thrown if <paramref name="scale"/> is not between 0 and 7.</exception>
+        public static Array BuiltinDatetime2 (int size = 0, byte precision = 0, byte scale = 7)
+        {
+            _ = size;
+            _ = precision;
+            DateTime[] retValues;
+
+            if (scale == 0)
+            {
+                // Default Value = 7
+                retValues = [
+                    new(1, 1, 1),
+                    new(2000, 1, 1),
+                    new(9999, 31, 12)
+                    ];
+                // TODO: Werte definieren
+            }
+            else if (scale < 0 || scale > 7)
+            {
+                throw new ArgumentOutOfRangeException(nameof(scale), "The scale must be a value from 0 through 7.");
+            }
+            else
+            {
+                retValues = [
+                    new(1, 1, 1),
+                    new(2000, 1, 1),
+                    new(9999, 31, 12)
+                    ];
+                // TODO: Werte definieren
+            }
+
+            return retValues;
+        }
     }
 }
