@@ -565,5 +565,28 @@ namespace Matrix.MsSql.Unit
 
             return retValues;
         }
+
+        /// <summary>
+        /// Represents built-in test values for the type <see cref="SqlDbType.DateTime"/>.
+        /// </summary>
+        /// <param name="size">Not required for this type.</param>
+        /// <param name="precision">Not required for this type.</param>
+        /// <param name="sclae">Not required for this type.</param>
+        /// <returns>Returns an array with test values.</returns>
+        public static Array BuiltinDatetime (int size = 0, byte precision = 0, byte sclae = 0)
+        {
+            _ = size;
+            _ = precision;
+            _ = sclae;
+            DateTime[] retValues;
+
+            retValues = [
+                new(1753, 1, 1),
+                new(2000, 1, 1),
+                new(9999, 12, 31)
+                ];
+
+            return retValues;
+        }
     }
 }
