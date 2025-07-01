@@ -11,7 +11,6 @@ namespace Matrix.MsSql.Unit
     /// <seealso href="https://learn.microsoft.com/en-us/sql/connect/ado-net/sql-server-data-type-mappings"/>
     public static class BuiltinTestValues
     {
-
         /// <summary>
         /// Represents built-in test values for the type <see cref="SqlDbType.Binary"/>.
         /// </summary>
@@ -623,6 +622,47 @@ namespace Matrix.MsSql.Unit
                     new(1, 1, 1),
                     new(2000, 1, 1),
                     new(9999, 31, 12)
+                    ];
+                // TODO: Werte definieren
+            }
+
+            return retValues;
+        }
+
+        /// <summary>
+        /// Represents built-in test values for the type <see cref="SqlDbType.DateTimeOffset"/>.
+        /// </summary>
+        /// <param name="size">Not required for this type.</param>
+        /// <param name="precision">Not required for this type.</param>
+        /// <param name="scale">The fractional second scale of the type from 0 through 7. Set 0 for the default value 7.</param>
+        /// <returns>Returns an array with test values.</returns>
+        /// <exception cref="ArgumentOutOfRangeException">Will be thrown if <paramref name="scale"/> is not between 0 and 7.</exception>
+        public static Array BuiltinDatetimeoffset (int size = 0, byte precision = 0, byte scale = 7)
+        {
+            _ = size;
+            _ = precision;
+            DateTimeOffset[] retValues;
+
+            if (scale == 0)
+            {
+                // Default Value = 7
+                retValues = [
+                    new(new DateTime(1, 1, 1), new TimeSpan(-14, 0, 0)),
+                    new(new DateTime(2000, 1, 1), new TimeSpan(0, 0, 0)),
+                    new(new DateTime(9999, 12, 31), new TimeSpan(+14, 0, 0))
+                    ];
+                // TODO: Werte definieren
+            }
+            else if (scale < 0 || scale > 7)
+            {
+                throw new ArgumentOutOfRangeException(nameof(scale), "The scale must be a value from 0 through 7.");
+            }
+            else
+            {
+                retValues = [
+                    new(new DateTime(1, 1, 1), new TimeSpan(-14, 0, 0)),
+                    new(new DateTime(2000, 1, 1), new TimeSpan(0, 0, 0)),
+                    new(new DateTime(9999, 12, 31), new TimeSpan(+1, 0, 0))
                     ];
                 // TODO: Werte definieren
             }
