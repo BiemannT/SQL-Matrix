@@ -42,6 +42,9 @@ namespace Matrix.MsSql.Unit
                     throw new InvalidOperationException($"Identifying the SQL data type for the parameter \"{input.ParameterName}\" failed.", ex);
                 }
             }
+
+            // Nullable
+            this.IsNullable = input.Nullable;
         }
 
         /// <summary>
@@ -88,6 +91,12 @@ namespace Matrix.MsSql.Unit
         /// </value>
         /// <seealso cref="Microsoft.Data.SqlClient.SqlParameter.Scale"/>
         public byte Scale { get; private set; }
+
+        /// <summary>
+        /// Gets a value that indicates whether the parameter accepts null values.
+        /// </summary>
+        /// <value><see langword="true"/> if null values are accepted, otherwise <see langword="false"/>.</value>
+        public bool IsNullable { get; private set; }
 
         /// <summary>
         /// Gets the method handler to retrieve the array with built-in test values, if available for the actual SQL-type.
