@@ -23,6 +23,7 @@ namespace Matrix.MsSql.Unit
             MaxExecutionTime = 1;
             Inputs = [];
             FileName = new("test.json");
+            TestCases = new();
         }
 
         /// <summary>
@@ -82,5 +83,12 @@ namespace Matrix.MsSql.Unit
         /// <remarks>The default name is "test.json" located in the current working directory.</remarks>
         [JsonIgnore]
         public FileInfo FileName { get; set; }
+
+        /// <summary>
+        /// Gets the collection of all possible test cases.
+        /// </summary>
+        /// <remarks>Execute <see cref="BuildTestCases"/> method before getting the collection. Otherwise the collection is empty.</remarks>
+        [JsonIgnore]
+        public TestCaseCollection TestCases { get; private set; }
     }
 }
