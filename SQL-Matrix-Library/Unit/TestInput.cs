@@ -56,7 +56,7 @@ namespace Matrix.MsSql.Unit
         /// Gets or sets a list of user defined values to be tested additionally
         /// to the pre-defined test values according to the <see cref="Matrix.MsSql.Unit.TestInput.SqlType"/>.
         /// </summary>
-        [JsonPropertyName("Inputs")]
+        [JsonPropertyName("UserValues")]
         public System.Collections.ArrayList UserValues { get; set; }
     }
 }
