@@ -10,9 +10,6 @@ namespace Matrix.MsSql.Unit
         /// <summary>
         /// Initializes a new instance of the <see cref="Matrix.MsSql.Unit.TestDefinition"/>-class.
         /// </summary>
-        /// <remarks>
-        /// This constructor should be used only from the JSON-serialization-class.
-        /// </remarks>
         public TestDefinition()
         {
             // Initialize the class with default values.

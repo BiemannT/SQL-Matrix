@@ -10,9 +10,6 @@ namespace Matrix.MsSql.Unit
         /// <summary>
         /// Initializes a new instance of the <see cref="Matrix.MsSql.Unit.TestInput"/>-class.
         /// </summary>
-        /// <remarks>
-        /// This constructor should be used only from the JSON-serialization-class.
-        /// </remarks>
         public TestInput()
         {
             ParameterName = string.Empty;
@@ -40,6 +37,7 @@ namespace Matrix.MsSql.Unit
 
         /// <summary>
         /// Gets or sets if a NULL-value is allowed for this parameter.
+        /// Default value is <see langword="true"/>.
         /// </summary>
         [JsonPropertyName("Nullable")]
         [JsonPropertyOrder(-8)]
@@ -47,6 +45,7 @@ namespace Matrix.MsSql.Unit
 
         /// <summary>
         /// Gets or sets if a DEFAULT-value is available for this parameter.
+        /// Default value is <see langword="false"/>.
         /// </summary>
         [JsonPropertyName("Default")]
         [JsonPropertyOrder(-7)]
