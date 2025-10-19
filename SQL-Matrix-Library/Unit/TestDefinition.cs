@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using Matrix.MsSql.Common;
+using System.Text.Json.Serialization;
 
 namespace Matrix.MsSql.Unit
 {
@@ -20,7 +21,7 @@ namespace Matrix.MsSql.Unit
             MaxExecutionTime = 1;
             Inputs = [];
             FileName = new("test.json");
-            TestCases = new();
+            TestCases = new([]);
         }
 
         /// <summary>
@@ -87,5 +88,67 @@ namespace Matrix.MsSql.Unit
         /// <remarks>Execute <see cref="BuildTestCases"/> method before getting the collection. Otherwise the collection is empty.</remarks>
         [JsonIgnore]
         public TestCaseCollection TestCases { get; private set; }
+
+        // TODO: Load-Prozedur erstellen
+        // Statische Prozedur um eine neue Testdefinitions Instanz zu erstellen
+
+        // TODO: Save-Prozedur erstellen
+        // Instanz Prozedur erstellen, um den Inhalt dieser Instanz in einer Testdefinitionsdatei zu speichern.
+
+        /// <summary>
+        /// Generates the test cases based on the defined input parameters.
+        /// </summary>
+        /// <remarks>This method processes the input parameters of the instance to create a comprehensive
+        /// set of test cases. Each test case represents a unique combination of parameter values.
+        /// If the test definition has no input parameters, a single default test case is created.
+        /// The generated test cases are stored in the <see cref="TestCases"/> property.</remarks>
+        /// <exception cref="InvalidOperationException">Thrown if an error occurs while analyzing the input parameters.</exception>
+        public void BuildTestCases()
+        {
+            TestCaseParameter[][] parameterSet = new TestCaseParameter[this.Inputs.Count][];
+            List<TestCase> testCases = [];
+            Combinator combinator = new();
+
+            // Alle Inputs dieser Instanz durchlaufen und die TestCaseParameter generieren.
+            // In der ersten Dimension sind alle Parameter enthalten und in der zweiten Dimension alle Werte.
+
+            for (int i = 0; i < this.Inputs.Count; i++)
+            {
+                try
+                {
+                    parameterSet[i] = TestCaseParameter.GenerateParameters(this.Inputs[i]);
+                    combinator.AddDimension(parameterSet[i].Length);
+                }
+                catch (Exception ex)
+                {
+                    throw new InvalidOperationException($"An error occured during analyzing the parameter {this.Inputs[i].ParameterName}.", ex);
+                }
+            }
+
+            // Parameter kombinieren und damit Testfälle erstellen
+            if (combinator.TotalCombinations == 0)
+            {
+                // Nur ein Testfall
+                testCases.Add(new TestCase());
+            }
+            else
+            {
+                // Mehrere Testfälle
+                foreach (int[] combination in combinator)
+                {
+                    TestCaseParameter[] parameters = new TestCaseParameter[combination.Length];
+
+                    for (int j = 0; j < combination.Length; j++)
+                    {
+                        parameters[j] = parameterSet[j][combination[j]];
+                    }
+
+                    testCases.Add(new TestCase(parameters));
+                }
+            }
+
+            // Testfälle in der Eigenschaft speichern
+            this.TestCases = new(testCases);
+        }
     }
 }
