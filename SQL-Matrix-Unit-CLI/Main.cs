@@ -63,6 +63,17 @@ namespace Matrix.MsSql.Unit
                 return;
             }
 
+            // Test aufbereiten
+            try
+            {
+                Definition.BuildTestCases();
+                Console.WriteLine($"Test definition with {Definition.TestCases.Count} test cases prepared successfully.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
             // Verbindung zum SQL-Server herstellen
             try
             {
