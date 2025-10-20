@@ -72,6 +72,10 @@ namespace Matrix.MsSql.Unit
                         definition.FileName = testFile;
 
                         Console.WriteLine($"Test file valid. Test Object: {definition.TestObjectType} {definition.SchemaName}.{definition.TestObjectName}");
+
+                        // Testfälle generieren
+                        definition.BuildTestCases();
+                        Console.WriteLine($"Test definition with {definition.TestCases.Count} test cases prepared successfully.");
                     }
                     catch (JsonException ex)
                     {
