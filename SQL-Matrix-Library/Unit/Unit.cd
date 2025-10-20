@@ -19,18 +19,18 @@
         <Position X="1.464" Y="0.091" />
       </MemberNameLabel>
     </AssociationLine>
-    <AssociationLine Name="TestCases" Type="Matrix.MsSql.Unit.TestCaseCollection">
-      <MemberNameLabel ManuallyPlaced="true">
-        <Position X="2.527" Y="0.07" />
-      </MemberNameLabel>
-    </AssociationLine>
     <AssociationLine Name="Inputs" Type="Matrix.MsSql.Unit.TestInput">
       <MemberNameLabel ManuallyPlaced="true">
         <Position X="-1.796" Y="0.893" />
       </MemberNameLabel>
     </AssociationLine>
+    <AssociationLine Name="TestCases" Type="Matrix.MsSql.Unit.TestCaseCollection">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="2.527" Y="0.07" />
+      </MemberNameLabel>
+    </AssociationLine>
     <TypeIdentifier>
-      <HashCode>AAIAAAAAAAAAAAAAAAAAAAIAEgAAEAQIAAAAAABAUAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAIAEgAAEAQIAAAAAABAUAA=</HashCode>
       <FileName>Unit\TestDefinition.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -44,6 +44,11 @@
   </Class>
   <Class Name="Matrix.MsSql.Unit.UnitTests">
     <Position X="5.5" Y="0.75" Width="4" />
+    <AssociationLine Name="TestDefinitions" Type="Matrix.MsSql.Unit.TestDefinition">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-2.453" Y="0.768" />
+      </MemberNameLabel>
+    </AssociationLine>
     <AssociationLine Name="DropDatabaseBeforeTest" Type="Matrix.MsSql.DropDatabaseBeforeTestEnum">
       <MemberNameLabel ManuallyPlaced="true">
         <Position X="0.6" Y="0.06" />
@@ -52,11 +57,6 @@
     <AssociationLine Name="KeepDatabaseAfterTest" Type="Matrix.MsSql.Unit.KeepDatabaseAfterTestEnum">
       <MemberNameLabel ManuallyPlaced="true">
         <Position X="0.756" Y="0.07" />
-      </MemberNameLabel>
-    </AssociationLine>
-    <AssociationLine Name="TestDefinitions" Type="Matrix.MsSql.Unit.TestDefinition">
-      <MemberNameLabel ManuallyPlaced="true">
-        <Position X="-2.453" Y="0.768" />
       </MemberNameLabel>
     </AssociationLine>
     <TypeIdentifier>
@@ -78,13 +78,21 @@
         <Position X="1.818" Y="0.081" />
       </MemberNameLabel>
     </AssociationLine>
+    <AssociationLine Name="Parameters" Type="Matrix.MsSql.Unit.TestCaseParameter">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-2.296" Y="1.393" />
+      </MemberNameLabel>
+    </AssociationLine>
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAABCAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAIAABCAAAAA=</HashCode>
       <FileName>Unit\TestCase.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
       <Property Name="State" />
     </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="Parameters" />
+    </ShowAsCollectionAssociation>
   </Class>
   <Class Name="Matrix.MsSql.Unit.TestCaseCollection">
     <Position X="11.75" Y="4.5" Width="3" />
@@ -132,12 +140,28 @@
       </MemberNameLabel>
     </AssociationLine>
     <TypeIdentifier>
-      <HashCode>AQAAAAAAAAAAgAAAAAIAAAAAAAAAABAAAQAABAAAEAA=</HashCode>
+      <HashCode>AQAAAAAAAAAAgAAAAAIAAAAAAAAAABAAAQAABAAAMAA=</HashCode>
       <FileName>Unit\TestCaseParameterBase.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
       <Property Name="BuiltinTestValue" />
     </ShowAsAssociation>
+  </Class>
+  <Class Name="Matrix.MsSql.Common.Combinator">
+    <Position X="11.75" Y="16.5" Width="3" />
+    <TypeIdentifier>
+      <HashCode>gAAAAAAAAAAhABAAAAAAAAAAAACAAAAEAAAAAgAAAAA=</HashCode>
+      <FileName>Common\Combinator.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Matrix.MsSql.Common.CombinatorEnumerator">
+    <Position X="16.5" Y="16.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAABAAAAACAAAAAAAAAAAAAIAAAgAAIAAA=</HashCode>
+      <FileName>Common\Combinator.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
   </Class>
   <Enum Name="Matrix.MsSql.Unit.TestObjectTypeEnum">
     <Position X="0.75" Y="5.75" Width="2" />
