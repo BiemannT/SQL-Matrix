@@ -1,0 +1,43 @@
+name: Matrix_SQL
+services:
+  sql-2017:
+    image: mcr.microsoft.com/mssql/server:2017-latest
+
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_PID=Express
+      - MSSQL_LCID=1031
+      - MSSQL_MEMORY_LIMIT_MB=2048
+      - MSSQL_SA_PASSWORD=Sql2Admin
+      - TZ=Europe/Berlin
+
+    ports:
+      - "1433:1433"
+
+  sql-2019:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_PID=Express
+      - MSSQL_LCID=1031
+      - MSSQL_MEMORY_LIMIT_MB=2048
+      - MSSQL_SA_PASSWORD=Sql2Admin
+      - TZ=Europe/Berlin
+
+    ports:
+      - "1434:1433"
+
+  sql-2022:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_PID=Express
+      - MSSQL_LCID=1031
+      - MSSQL_MEMORY_LIMIT_MB=2048
+      - MSSQL_SA_PASSWORD=Sql2Admin
+      - TZ=Europe/Berlin
+
+    ports:
+      - "1435:1433"
