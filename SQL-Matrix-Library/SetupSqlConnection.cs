@@ -203,7 +203,7 @@ namespace Matrix.MsSql
         /// </param>
         /// <exception cref="ArgumentException">The parameter <paramref name="ServerNameOrIP"/> is not valid.</exception>
         /// <exception cref="ArgumentNullException">The parameter <paramref name="ServerNameOrIP"/> is empty.</exception>
-        public void ParseSQLServerIP (string ServerNameOrIP, bool CheckDNS = false)
+        public void ParseSQLServerIP(string ServerNameOrIP, bool CheckDNS = false)
         {
             if (!string.IsNullOrWhiteSpace(ServerNameOrIP))
             {
@@ -249,7 +249,7 @@ namespace Matrix.MsSql
         /// <param name="ServerNameOrIP"><inheritdoc cref="ParseSQLServerIP(string, bool)" path="/param[@name='ServerNameOrIP']"/></param>
         /// <param name="CheckDNS"><inheritdoc cref="ParseSQLServerIP(string, bool)" path="/param[@name='CheckDNS']"/></param>
         /// <returns><see langword="true"/> if the parameter <paramref name="ServerNameOrIP"/> contains a valid IP-Address or host-name, otherwise <see langword="false"/>.</returns>
-        public bool TryParseSQLServerIP (string ServerNameOrIP, bool CheckDNS = false)
+        public bool TryParseSQLServerIP(string ServerNameOrIP, bool CheckDNS = false)
         {
             try
             {
@@ -521,6 +521,108 @@ namespace Matrix.MsSql
                 PersistSecurityInfo = false,
                 TrustServerCertificate = true
             };
+        }
+
+        #endregion
+
+        #region ExecuteQueries
+
+        /// <summary>
+        /// Executes a non-query SQL command using the credentials provided in this instance.
+        /// </summary>
+        /// <remarks>Ensure that the <paramref name="command"/>
+        /// object is properly configured with the necessary SQL statement and parameters before calling this method.</remarks>
+        /// <param name="command">The <see cref="SqlCommand"/> to execute. The command must include the SQL statement and any required
+        /// parameters.</param>
+        /// <returns>The number of rows affected by the command.</returns>
+        /// <exception cref="InvalidOperationException">Thrown if an error occurs while executing the command on the SQL server.
+        /// The inner exception contains details about the underlying issue.</exception>"
+        public int ExecNonQuery(SqlCommand command)
+        {
+            try
+            {
+                // Verbindung zum SQL-Server herstellen
+                SqlCredential cred = new(this.SQLServerLoginName, this.SQLServerLoginPassword);
+
+                using SqlConnection conn = new(this.GetConnectionString().ConnectionString, cred);
+
+                command.Connection = conn;
+
+                // Verbindung öffnen und Befehl ausführen
+                conn.Open();
+
+                return command.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException("Error occured during executing the non-query command on the SQL-Server.", ex);
+            }
+
+        }
+
+        /// <summary>
+        /// Executes the specified SQL command using the credentials provided in this instance and returns the first column of the first row in the result set.
+        /// Additional rows and columns are ignored.
+        /// </summary>
+        /// <remarks>Ensure that the <paramref name="command"/> object is properly configured with the necessary SQL statement and parameters before calling
+        /// this method.</remarks>
+        /// <param name="command">The <see cref="SqlCommand"/> to execute. The command must include the SQL statement and any required parameters.</param>
+        /// <returns>The first column of the first row in the result set, or <see langword="null"/> if the result set is empty.</returns>
+        /// <exception cref="InvalidOperationException">Thrown when an error occurs while executing the command on the SQL Server. The inner exception contains
+        /// details about the underlying issue.</exception>
+        public object? ExecScalar(SqlCommand command)
+        {
+            try
+            {
+                // Verbindung zum SQL-Server herstellen
+                SqlCredential cred = new(this.SQLServerLoginName, this.SQLServerLoginPassword);
+
+                using SqlConnection conn = new(this.GetConnectionString().ConnectionString, cred);
+
+                command.Connection = conn;
+
+                // Verbindung öffnen und Befehl ausführen
+                conn.Open();
+
+                return command.ExecuteScalar();
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException("Error occured during executing the scalar command on the SQL-Server.", ex);
+            }
+        }
+
+        /// <summary>
+        /// Executes the specified <see cref="SqlCommand"/> using the credentials provided in this instance and returns a <see cref="SqlDataReader"/> to read the results.
+        /// </summary>
+        /// <remarks>Ensure that the <paramref name="command"/> object is properly configured with the necessary SQL statement and parameters before calling
+        /// this method. The connection is automatically closed when the returned <see cref="SqlDataReader"/> is disposed.</remarks>
+        /// <param name="command">The <see cref="SqlCommand"/> to execute. The command must include the SQL statement and any required parameters.</param>
+        /// <returns>A <see cref="SqlDataReader"/> object for reading the results of the executed command. The connection will
+        /// automatically close when the reader is disposed.</returns>
+        /// <exception cref="InvalidOperationException">Thrown when an error occurs while executing the command on the SQL Server. The inner exception contains
+        /// details about the underlying issue.</exception>
+        public SqlDataReader ExecReader(SqlCommand command)
+        {
+            try
+            {
+                // Verbindung zum SQL-Server herstellen
+                SqlCredential cred = new(this.SQLServerLoginName, this.SQLServerLoginPassword);
+
+                SqlConnection conn = new(this.GetConnectionString().ConnectionString, cred);
+
+                command.Connection = conn;
+
+                // Verbindung öffnen und Befehl ausführen
+                conn.Open();
+
+                // Die Verbindung wird erst geschlossen, wenn der SqlDataReader geschlossen wird.
+                return command.ExecuteReader(System.Data.CommandBehavior.CloseConnection);
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException("Error occured during executing the reader command on the SQL-Server.", ex);
+            }
         }
 
         #endregion
