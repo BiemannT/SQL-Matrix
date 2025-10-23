@@ -79,12 +79,12 @@
       </MemberNameLabel>
     </AssociationLine>
     <AssociationLine Name="Parameters" Type="Matrix.MsSql.Unit.TestCaseParameter">
-      <MemberNameLabel ManuallyPlaced="true">
-        <Position X="-2.296" Y="1.393" />
+      <MemberNameLabel ManuallyPlaced="true" ManuallySized="true">
+        <Position X="-2.306" Y="0.466" Height="0.182" Width="2.151" />
       </MemberNameLabel>
     </AssociationLine>
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAIAABCAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAIAIAQBCAAAAA=</HashCode>
       <FileName>Unit\TestCase.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>

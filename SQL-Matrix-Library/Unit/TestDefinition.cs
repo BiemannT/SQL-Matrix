@@ -129,7 +129,10 @@ namespace Matrix.MsSql.Unit
             if (combinator.TotalCombinations == 0)
             {
                 // Nur ein Testfall
-                testCases.Add(new TestCase());
+                testCases.Add(new TestCase() { 
+                    ExecutionTimeout = this.MaxExecutionTime,
+                    TestObjectName = string.Concat(this.SchemaName, ".", this.TestObjectName)
+                });
             }
             else
             {
@@ -143,7 +146,11 @@ namespace Matrix.MsSql.Unit
                         parameters[j] = parameterSet[j][combination[j]];
                     }
 
-                    testCases.Add(new TestCase(parameters));
+                    testCases.Add(new TestCase(parameters)
+                    {
+                        ExecutionTimeout = this.MaxExecutionTime,
+                        TestObjectName = string.Concat(this.SchemaName, ".", this.TestObjectName)
+                    });
                 }
             }
 

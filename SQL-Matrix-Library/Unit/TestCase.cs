@@ -49,6 +49,18 @@ namespace Matrix.MsSql.Unit
         }
 
         /// <summary>
+        /// Gets or sets the maximum execution timeout, in seconds, for this test case.
+        /// </summary>
+        /// <remarks>Setting this property to a value less than or equal to zero disables the
+        /// timeout.</remarks>
+        public int ExecutionTimeout { get; set; } = 30;
+
+        /// <summary>
+        /// Gets the name of the SQL test object including schema name.
+        /// </summary>
+        public string TestObjectName { get; internal set; } = string.Empty;
+
+        /// <summary>
         /// Gets the collection of parameters associated with this test case.
         /// </summary>
         public TestCaseParameter[] Parameters { get; private set; }
