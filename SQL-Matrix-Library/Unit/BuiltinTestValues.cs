@@ -11,6 +11,12 @@ namespace Matrix.MsSql.Unit
     /// <seealso href="https://learn.microsoft.com/en-us/sql/connect/ado-net/sql-server-data-type-mappings"/>
     public static class BuiltinTestValues
     {
+        // TODO: Behandlung von Werten die den Definitionsbereich überschreiten.
+        // Im SQL-Server werden standardmäßig Werte die den Definitionsbereich überschreiten auf den maximal zulässigen Datenbereich beschnitten.
+        // Dieses Verhalten kann unter Umständen zu erwünschten oder auch unerwünschten Ergebnissen führen.
+        // Um dieses Verhalten zu berücksichtigen, sollte eine Eigenschaft vom Typ Bool im TestInput definiert werden, die dieses Verhalten steuert.
+        // Diese Eigenschaft soll bei den folgenden Methoden berücksichtigt werden und gegebenenfalls Werte generieren, die den Definitionsbereich überschreiten.
+
         /// <summary>
         /// Represents built-in test values for the type <see cref="SqlDbType.Binary"/>.
         /// </summary>
