@@ -3,6 +3,10 @@ using System.Text.Json.Serialization;
 
 namespace Matrix.MsSql.Unit
 {
+    // TODO: Klassen für die Test Definitions-Datei sollten unabhängig sein von den eigentlichen Unit-Tests.
+    // Damit sind unterschiedliche Dateiformate prinzipiell möglich.
+    // Zudem sollten unterschiedliche Datei Versionen berücksichtigt werden, um stets Abwärtskompatibilität zu gewährleisten.
+
     /// <summary>
     /// This class provides properties and methods to represent the JSON-test file.
     /// </summary>
@@ -33,6 +37,7 @@ namespace Matrix.MsSql.Unit
         [JsonRequired]
         public ApiVersionEnum ApiVersion { get; set; }
 
+        // TODO: Prüfen, ob der Objekt Typ für die Ausführung der Tests wirklich erforderlich ist.
         /// <summary>
         /// Gets or sets the type of the tested object.
         /// </summary>
@@ -91,6 +96,7 @@ namespace Matrix.MsSql.Unit
 
         // TODO: Load-Prozedur erstellen
         // Statische Prozedur um eine neue Testdefinitions Instanz zu erstellen
+        // Beim Ladevorgang soll die korrekte API-Version geprüft werden.
 
         // TODO: Save-Prozedur erstellen
         // Instanz Prozedur erstellen, um den Inhalt dieser Instanz in einer Testdefinitionsdatei zu speichern.
