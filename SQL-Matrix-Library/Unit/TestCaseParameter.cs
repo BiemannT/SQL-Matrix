@@ -88,6 +88,7 @@ namespace Matrix.MsSql.Unit
         /// <param name="input">An instance of <see cref="TestInput"/> as template for the generation of test parameters.</param>
         /// <returns>Returns an array of <see cref="TestCaseParameter"/> with built-in test values and user specific test values.</returns>
         /// <exception cref="InvalidOperationException">The content of the <paramref name="input"/> is not valid.</exception>
+        /// <exception cref="NotSupportedException">The user defined values for the specific SqlDbType are not implemented yet.</exception>"
         public static TestCaseParameter[] GenerateParameters(TestInput input)
         {
             TestCaseParameterBase parameterBase;
@@ -154,8 +155,132 @@ namespace Matrix.MsSql.Unit
                 }
             }
 
-            // Benutzerdefinierte Werte
-            // TODO: Benutzerdefinierte Werte verarbeiten und der Parameterliste ergänzen
+            // Benutzerdefinierte Werte liegen als "JsonElement" im Array vor und müssen in den entsprechenden Datentyp konvertiert werden.
+            // Dabei werden die korrekten Datentypen überprüft.
+            // Es findet aber keine Prüfung statt, ob der Wert den Definitionsbereich des SQL-Typs überschreitet, da diese Prüfungsaufgabe eventuell erwünscht ist.
+            // Standardmäßig werden vom SQL-Server die Daten abgeschnitten, wenn sie den Definitionsbereich überschreiten ohne eine Fehlermeldung zu erzeugen.
+            if (input.UserValues != null)
+            {
+                foreach (System.Text.Json.JsonElement benutzerWert in input.UserValues)
+                {
+                    // Zielobjekt für den konvertierten Parameterwert
+                    object convertedValue;
+
+                    // Fehlermeldung für eine fehlerhafte Konvertierung
+                    // Bei überlangen Werten wird nur der Anfangsteil angezeigt.
+                    string ValueErrorMessage = benutzerWert.ToString().Length > 20
+                        ? string.Concat("'", benutzerWert.ToString()[..20], "...'")
+                        : string.Concat("'", benutzerWert.ToString(), "'");
+                    string conversionErrorMessage = $"The user-defined value {ValueErrorMessage} cannot be converted to the SQL {parameterBase.Type} type.";
+                    string NotSupportedErrorMessage = $"The user-defined values for the SQL {parameterBase.Type} type are not supported yet.";
+
+                    // NULL-Werte werden als benutzerdefinierte Werte nicht unterstützt, da diese bereits in den builtin-Werten berücksichtigt werden, wenn der Nullable-Parameter gesetzt ist.
+                    if (benutzerWert.ValueKind == System.Text.Json.JsonValueKind.Null)
+                    {
+                        throw new InvalidOperationException("The user-defined NULL values are not supported. Please use the 'Nullable' property to include NULL test values.");
+                    }
+
+                    // Prüfen ob der benutzerdefinierte Wert mit dem erwarteten Datentyp übereinstimmt
+                    switch (parameterBase.Type)
+                    {
+                        case System.Data.SqlDbType.Bit:
+                            // Beim Datentyp Bit sind nur die Werte 0, 1, true, false zulässig und diese sind bereits von den builtin-Werten abgedeckt.
+                            throw new NotSupportedException("The user-defined values for the SQL Bit type are not supported. The test values 'true' and 'false' are included in the built-in test values by default.");
+
+                        #region SQL-Typen die im JSON-Element einen String erwarten
+                        case System.Data.SqlDbType.Char:
+                        case System.Data.SqlDbType.VarChar:
+                        case System.Data.SqlDbType.NChar:
+                        case System.Data.SqlDbType.NVarChar:
+                        case System.Data.SqlDbType.UniqueIdentifier:
+                        case System.Data.SqlDbType.Time:
+                        case System.Data.SqlDbType.Date:
+                        case System.Data.SqlDbType.SmallDateTime:
+                        case System.Data.SqlDbType.DateTime:
+                        case System.Data.SqlDbType.DateTime2:
+                        case System.Data.SqlDbType.DateTimeOffset:
+                            if (benutzerWert.ValueKind != System.Text.Json.JsonValueKind.String)
+                            {
+                                throw new InvalidOperationException(conversionErrorMessage);
+                            }
+
+                            try
+                            {
+                                convertedValue = parameterBase.Type switch
+                                {
+                                    System.Data.SqlDbType.Char => benutzerWert.GetString() ?? string.Empty,
+                                    System.Data.SqlDbType.VarChar => benutzerWert.GetString() ?? string.Empty,
+                                    System.Data.SqlDbType.NChar => benutzerWert.GetString() ?? string.Empty,
+                                    System.Data.SqlDbType.NVarChar => benutzerWert.GetString() ?? string.Empty,
+                                    System.Data.SqlDbType.UniqueIdentifier => benutzerWert.GetGuid(),
+                                    System.Data.SqlDbType.Time => benutzerWert.GetDateTime().TimeOfDay,
+                                    System.Data.SqlDbType.Date => benutzerWert.GetDateTime().Date,
+                                    System.Data.SqlDbType.SmallDateTime => benutzerWert.GetDateTime(),
+                                    System.Data.SqlDbType.DateTime => benutzerWert.GetDateTime(),
+                                    System.Data.SqlDbType.DateTime2 => benutzerWert.GetDateTime(),
+                                    System.Data.SqlDbType.DateTimeOffset => benutzerWert.GetDateTimeOffset(),
+                                    _ => DBNull.Value
+                                };
+                            }
+                            catch
+                            {
+                                throw new InvalidOperationException(conversionErrorMessage);
+                            }
+                            break;
+                        #endregion
+
+                        #region SQL-Typen die im JSON-Element eine Number erwarten
+                        case System.Data.SqlDbType.TinyInt:
+                        case System.Data.SqlDbType.SmallInt:
+                        case System.Data.SqlDbType.Int:
+                        case System.Data.SqlDbType.BigInt:
+                        case System.Data.SqlDbType.SmallMoney:
+                        case System.Data.SqlDbType.Money:
+                        case System.Data.SqlDbType.Decimal:
+                        case System.Data.SqlDbType.Real:
+                        case System.Data.SqlDbType.Float:
+                            if (benutzerWert.ValueKind != System.Text.Json.JsonValueKind.Number)
+                            {
+                                throw new InvalidOperationException(conversionErrorMessage);
+                            }
+
+                            try
+                            {
+                                convertedValue = parameterBase.Type switch
+                                {
+                                    System.Data.SqlDbType.TinyInt => benutzerWert.GetByte(),
+                                    System.Data.SqlDbType.SmallInt => benutzerWert.GetInt16(),
+                                    System.Data.SqlDbType.Int => benutzerWert.GetInt32(),
+                                    System.Data.SqlDbType.BigInt => benutzerWert.GetInt64(),
+                                    System.Data.SqlDbType.SmallMoney => benutzerWert.GetDecimal(),
+                                    System.Data.SqlDbType.Money => benutzerWert.GetDecimal(),
+                                    System.Data.SqlDbType.Decimal => benutzerWert.GetDecimal(),
+                                    System.Data.SqlDbType.Real => benutzerWert.GetSingle(),
+                                    System.Data.SqlDbType.Float => benutzerWert.GetDouble(),
+                                    _ => DBNull.Value
+                                };
+                            }
+                            catch
+                            {
+                                throw new InvalidOperationException(conversionErrorMessage);
+                            }
+                            break;
+                        #endregion
+
+                        default:
+                            throw new NotSupportedException(NotSupportedErrorMessage);
+                    }
+
+                    TestCaseParameter test = new(parameterBase)
+                    {
+                        IsBuiltinValue = false,
+                        IsNull = false,
+                        IsDefaultValue = false,
+                        Value = convertedValue,
+                    };
+                    parameters.Add(test);
+                }
+            }
 
             return (TestCaseParameter[])parameters.ToArray(typeof(TestCaseParameter));
         }
