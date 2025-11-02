@@ -20,9 +20,7 @@ This namespace contains classes to represent the content of the test definition.
 This namespace contains abstract classes which should be inherit from all sub-namespaces.
 
 ##### BiemannT.MUT.MsSql.Def.JSON
-This namespace contains the representation of test definitions in JSON-file format. The sub-namespaces contains different API-versions to ensure backward compatibility.
-
-+ **v1**: The classes in this namespace represents the first version.
+This namespace contains the representation of test definitions in JSON-file format.
 
 #### BiemannT.MUT.MsSql.Tests
 This namespace contains the classes to execute the tests.
