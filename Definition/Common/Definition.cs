@@ -1,4 +1,4 @@
-﻿namespace BiemannT.MUT.MsSql.Def.Base
+﻿namespace BiemannT.MUT.MsSql.Def.Common
 {
     /// <summary>
     /// This class provides the base properties and methods for different definition formats.
@@ -25,6 +25,11 @@
         /// Gets or sets the maximum execution time for each test case in seconds.
         /// </summary>
         public abstract int MaxExecutionTime { get; set; }
+
+        /// <summary>
+        /// Gets the collection of input parameters for the test object.
+        /// </summary>
+        public abstract List<Input> Inputs { get; }
 
         /// <summary>
         /// Loads the definition from the underlying source.
