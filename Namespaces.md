@@ -17,7 +17,9 @@ This namespace contains the command-line-interface application.
 This namespace contains classes to represent the content of the test definition.
 
 ##### BiemannT.MUT.MsSql.Def.Base
-This namespace contains abstract classes which should be inherit from all sub-namespaces.
+This namespace contains abstract classes which should be inherit from all definition sub-namespaces. The classes represents base properties and methods to handle the test definition data. Storage specific implementations shall be done in the derived specialized classes.
+
+The main goal of the base classes is to perform the tests independently from the storage system.
 
 ##### BiemannT.MUT.MsSql.Def.JSON
 This namespace contains the representation of test definitions in JSON-file format.
