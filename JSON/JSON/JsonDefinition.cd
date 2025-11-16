@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
+  <Class Name="BiemannT.MUT.MsSql.Def.JSON.JsonDefinition">
+    <Position X="0.5" Y="0.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAwIAAAAAAAAAAAAAAIAIEEAAAAAAAAAAAAAhAUAA=</HashCode>
+      <FileName>JSON\JsonDefinition.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Field Name="_inputs" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="BiemannT.MUT.MsSql.Def.JSON.JsonInput">
+    <Position X="5.5" Y="0.5" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>gAAAAAAAAAAAAAAAACAAAEAAACAAABAAAAAAAAQCIAI=</HashCode>
+      <FileName>JSON\JsonInput.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BiemannT.MUT.MsSql.Def.JSON.JsonDataConverter">
+    <Position X="10.75" Y="0.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgA=</HashCode>
+      <FileName>JSON\JsonDataConverter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
