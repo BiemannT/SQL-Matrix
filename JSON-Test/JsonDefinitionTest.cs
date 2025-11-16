@@ -6,6 +6,21 @@ namespace BiemannT.MUT.MsSql.Def.JSON.Test
     public sealed class JsonDefinitionTest
     {
         /// <summary>
+        /// Test loading without a given file name.
+        /// </summary>
+        [TestMethod]
+        public void Test_LoadWithoutFile()
+        {
+            JsonDefinition jsonTest = new();
+
+            // Bei der Methode Load wird eine Exception erwartet.
+
+            Exception result = Assert.ThrowsException<InvalidOperationException>(jsonTest.Load);
+
+            Assert.AreEqual("FileName is not set.", result.Message);
+        }
+
+        /// <summary>
         /// Test loading of an empty json-file.
         /// </summary>
         [TestMethod]
