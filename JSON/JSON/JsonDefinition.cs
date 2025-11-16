@@ -122,6 +122,10 @@ namespace BiemannT.MUT.MsSql.Def.JSON
         [JsonIgnore]
         public FileInfo? FileName { get; set; }
 
+        /// <summary>
+        /// Loads the content of the JSON definition file, defined in <see cref="FileName"/>.
+        /// </summary>
+        /// <exception cref="InvalidOperationException">Will be thrown, if no <see cref="FileName"/> is defined - OR - the content of the file is not valid - OR - the required properties are not defined in the file.</exception>
         public override void Load()
         {
             // Prüfen, ob ein Dateiname angegeben ist
