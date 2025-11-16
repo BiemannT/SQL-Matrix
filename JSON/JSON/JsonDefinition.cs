@@ -13,44 +13,48 @@ namespace BiemannT.MUT.MsSql.Def.JSON
         /// </summary>
         public JsonDefinition() {
             // Initialize the class with default values.
-            _apiVersionJson = "v1";
+            ApiVersion = new(1, 0);
             SchemaName = string.Empty;
             ObjectName = string.Empty;
             _maxExecutionTime = 10;
             _inputs = [];
         }
 
+        /// <summary>
+        /// Internal representation for the JSON Property of the API-Version.
+        /// </summary>
+        /// <exception cref="NotSupportedException">Will be thrown in case of an invalid version number.</exception>
         [JsonPropertyName("SQL-Matrix-Api-Version")]
         [JsonPropertyOrder(-10)]
         [JsonRequired]
         [JsonInclude]
-        private string _apiVersionJson;
-
-        /// <summary>
-        /// Gets or sets the API version for the current instance.
-        /// </summary>
-        /// <value>The API version. The default value is 1.0</value>
-        /// <remarks>This property is required!</remarks>
-        /// <exception cref="NotSupportedException">Currently version 1.0 is supported.</exception>
-        [JsonIgnore]
-        public override Version ApiVersion
+        private string ApiVersionJson
         {
-            get => _apiVersionJson switch
+            get
             {
-                "v1" => new Version(1, 0),
-                _ => throw new NotSupportedException($"The API-Version '{_apiVersionJson}' is not supported."),
-            };
-
-            protected set
-            {
-                _apiVersionJson = value.Major switch
+                return ApiVersion switch
                 {
-                    1 => "v1",
-                    _ => throw new NotSupportedException($"The API-Version '{value}' is not supported."),
+                    { Major: 1, Minor: 0 } => "v1",
+                    _ => string.Empty
                 };
             }
-            
+
+            set
+            {
+                ApiVersion = value switch
+                {
+                    "v1" => new(1, 0),
+                    _ => throw new NotSupportedException($"The API-Version '{value}' is not supported.")
+                };
+            }
         }
+
+        /// <summary>
+        /// Gets the API version for the current instance.
+        /// </summary>
+        /// <value>The API version. The default value is 1.0</value>
+        [JsonIgnore]
+        public override Version ApiVersion { get; protected set; }
 
         /// <summary>
         /// Gets or sets the schema name of the tested object.
@@ -135,7 +139,7 @@ namespace BiemannT.MUT.MsSql.Def.JSON
                 _definition = JsonSerializer.Deserialize<JsonDefinition>(FileName.Open(FileMode.Open, FileAccess.Read)) ?? throw new InvalidOperationException("Failure during reading the test file occured. Deserialization returned null.");
 
                 // Wenn erfolgreich, die Werte in die aktuelle Instanz übernehmen
-                this._apiVersionJson = _definition._apiVersionJson;
+                this.ApiVersion = _definition.ApiVersion;
                 this.SchemaName = _definition.SchemaName;
                 this.ObjectName = _definition.ObjectName;
                 this._maxExecutionTime = _definition._maxExecutionTime;
