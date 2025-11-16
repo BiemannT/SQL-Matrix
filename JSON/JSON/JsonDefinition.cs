@@ -76,9 +76,6 @@ namespace BiemannT.MUT.MsSql.Def.JSON
         [JsonRequired]
         public override string ObjectName { get; set; }
 
-        [JsonPropertyName("MaxExecutionTime")]
-        [JsonPropertyOrder(-7)]
-        [JsonInclude]
         private int _maxExecutionTime;
 
         /// <summary>
@@ -90,7 +87,8 @@ namespace BiemannT.MUT.MsSql.Def.JSON
         /// It is not recommended to set the value to 0 for test cases as the test case can freeze the overall testing.
         /// </value>
         /// <exception cref="ArgumentOutOfRangeException">Thrown when the value is less than zero.</exception>"
-        [JsonIgnore]
+        [JsonPropertyName("MaxExecutionTime")]
+        [JsonPropertyOrder(-7)]
         public override int MaxExecutionTime
         {
             get => _maxExecutionTime;
@@ -98,7 +96,7 @@ namespace BiemannT.MUT.MsSql.Def.JSON
             {
                 if (value < 0)
                 {
-                    throw new ArgumentOutOfRangeException(nameof(value), "MaxExecutionTime must be a positive integer.");
+                    throw new ArgumentOutOfRangeException(nameof(MaxExecutionTime), value, "MaxExecutionTime must be a positive integer.");
                 }
                 _maxExecutionTime = value;
             }
