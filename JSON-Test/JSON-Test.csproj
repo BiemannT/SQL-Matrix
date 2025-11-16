@@ -31,6 +31,9 @@
     <None Update="Definitionen\Invalid execution time.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Definitionen\Valid - no inputs - no required data.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

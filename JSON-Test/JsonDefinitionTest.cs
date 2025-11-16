@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using BiemannT.MUT.MsSql.Def.Common;
+using System.Text.Json;
 
 namespace BiemannT.MUT.MsSql.Def.JSON.Test
 {
@@ -87,6 +88,34 @@ namespace BiemannT.MUT.MsSql.Def.JSON.Test
 
             StringAssert.StartsWith(result.Message, "MaxExecutionTime must be a positive integer.");
             Assert.AreEqual(-10, ((ArgumentOutOfRangeException)result).ActualValue);
+        }
+
+        /// <summary>
+        /// Test loading of a definition file with valid content.
+        /// The file does not contain input parameters and no required table data definition.
+        /// </summary>
+        [TestMethod]
+        public void Test_LoadValid_NoInputs_NoRequiredData()
+        {
+            Definition jsonTest = new JsonDefinition()
+            {
+                FileName = new("./Definitionen/Valid - no inputs - no required data.json")
+            };
+
+            jsonTest.Load();
+
+            // Bei der Methode Load sollen alle Werte korrekt gelesen werden.
+            TestContext.WriteLine("Actual schema name: {0}", jsonTest.SchemaName);
+            Assert.AreEqual("dbo", jsonTest.SchemaName);
+
+            TestContext.WriteLine("Actual test object name: {0}", jsonTest.ObjectName);
+            Assert.AreEqual("TestProcedure", jsonTest.ObjectName);
+
+            TestContext.WriteLine("Actual MaxExecutionTime: {0}", jsonTest.MaxExecutionTime);
+            Assert.AreEqual(2, jsonTest.MaxExecutionTime);
+
+            TestContext.WriteLine("Actual number of inputs: {0}", jsonTest.Inputs.Count);
+            Assert.AreEqual(0, jsonTest.Inputs.Count);
         }
     }
 }
