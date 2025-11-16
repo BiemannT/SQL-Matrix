@@ -74,7 +74,6 @@ namespace BiemannT.MUT.MsSql.Def.JSON
 
         [JsonPropertyName("MaxExecutionTime")]
         [JsonPropertyOrder(-7)]
-        [JsonRequired]
         [JsonInclude]
         private int _maxExecutionTime;
 
@@ -86,7 +85,6 @@ namespace BiemannT.MUT.MsSql.Def.JSON
         /// The default value is 10 seconds. The value 0 means infinite execution time.
         /// It is not recommended to set the value to 0 for test cases as the test case can freeze the overall testing.
         /// </value>
-        /// <remarks>This property is required and must be set to a positive integer value.</remarks>
         /// <exception cref="ArgumentOutOfRangeException">Thrown when the value is less than zero.</exception>"
         [JsonIgnore]
         public override int MaxExecutionTime
