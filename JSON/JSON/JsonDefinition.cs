@@ -1,11 +1,12 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace BiemannT.MUT.MsSql.Def.JSON
 {
     /// <summary>
     /// This class provides properties and methods to interact with JSON-definition files.
     /// </summary>
-    public class JsonDefinition : Base.Definition
+    public class JsonDefinition : Common.Definition
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="JsonDefinition"/> class with default values.
@@ -16,6 +17,7 @@ namespace BiemannT.MUT.MsSql.Def.JSON
             SchemaName = string.Empty;
             ObjectName = string.Empty;
             _maxExecutionTime = 10;
+            _inputs = [];
         }
 
         [JsonPropertyName("SQL-Matrix-Api-Version")]
@@ -100,14 +102,55 @@ namespace BiemannT.MUT.MsSql.Def.JSON
             }
         }
 
+        [JsonPropertyName("Inputs")]
+        [JsonPropertyOrder(-6)]
+        [JsonInclude]
+        private List<JsonInput> _inputs;
+
+        /// <summary>
+        /// Gets the collection of input parameters.
+        /// </summary>
+        [JsonIgnore]
+        public override List<Common.Input> Inputs
+        {
+            get => [.. _inputs.Cast<Common.Input>()];
+        }
+
         /// <summary>
         /// Gets or sets the name of the JSON-definition file.
         /// </summary>
+        [JsonIgnore]
         public FileInfo? FileName { get; set; }
 
         public override void Load()
         {
-            throw new NotImplementedException();
+            // Prüfen, ob ein Dateiname angegeben ist
+            if (FileName == null)
+            {
+                throw new InvalidOperationException("FileName is not set.");
+            }
+
+            try
+            {
+                // Zunächst in eine lokale Variable des gleichen Typs deserialisieren
+                JsonDefinition _definition;
+                _definition = JsonSerializer.Deserialize<JsonDefinition>(FileName.Open(FileMode.Open, FileAccess.Read)) ?? throw new InvalidOperationException("Failure during reading the test file occured. Deserialization returned null.");
+
+                // Wenn erfolgreich, die Werte in die aktuelle Instanz übernehmen
+                this._apiVersionJson = _definition._apiVersionJson;
+                this.SchemaName = _definition.SchemaName;
+                this.ObjectName = _definition.ObjectName;
+                this._maxExecutionTime = _definition._maxExecutionTime;
+                this._inputs = _definition._inputs;
+            }
+            catch (JsonException ex)
+            {
+                throw new InvalidOperationException("The test file definition contains invalid JSON code - or - required fields are missing!", ex);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         public override void Save()
