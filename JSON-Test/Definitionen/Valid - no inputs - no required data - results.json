@@ -1,0 +1,34 @@
+﻿{
+  "SQL-Matrix-Api-Version": "v1",
+  "SchemaName": "dbo",
+  "TestObjectName": "TestProcedure",
+  "MaxExecutionTime": 2,
+  "ExcpectedResults": [
+    {
+      "ExcpectedResultType": "Exception",
+      "ExpectedErrorNumber": 515,
+      "LastExecutionDateTime": "2025-11-17T18:00:00",
+      "LastExecutionDuration": "0:00:00.500"
+    },
+    {
+      "ExpectedResultType": "Value",
+      "ExpectedValue": -10.245,
+      "LastExecutionDateTime": "2025-11-17T19:00:00",
+      "LastExecutionDuration": "0:00:01.100"
+    },
+    {
+      "ExpectedResultType": "Value",
+      "ExpectedValue": "Test",
+      "LastExecutionDateTime": "2025-11-17T20:00:00",
+      "LastExecutionDuration": "0:01:00.200"
+    },
+    {
+      "ExpectedResutType": "Resultset",
+      "ExpectedResultSets": [
+
+      ],
+      "LastExecutionDateTime": null,
+      "LastExecutionDuration": null
+    }
+  ]
+}

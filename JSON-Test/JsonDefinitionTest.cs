@@ -117,5 +117,30 @@ namespace BiemannT.MUT.MsSql.Def.JSON.Test
             TestContext.WriteLine("Actual number of inputs: {0}", jsonTest.Inputs.Count);
             Assert.AreEqual(0, jsonTest.Inputs.Count);
         }
+
+        /// <summary>
+        /// Test loading of a definition file with valid content.
+        /// The file does not contain input parameters and no required table data definition,
+        /// but it contains different types of expected results.
+        /// </summary>
+        /// <remarks>
+        /// The test file is based on the test <see cref="Test_LoadValid_NoInputs_NoRequiredData"/>.
+        /// This test is focused on the correct loading of the different results.
+        /// </remarks>
+        [TestMethod]
+        public void Test_LoadValid_NoInputs_NoRequiredData_Results()
+        {
+            Definition jsonTest = new JsonDefinition()
+            {
+                FileName = new("./Definitionen/Valid - no inputs - no required data - results.json")
+            };
+
+            jsonTest.Load();
+
+            // Bei der Methode Load sollen alle Werte korrekt gelesen werden.
+            // Es wird davon ausgegangen, dass die Basis Definitions-Eigenschaften richtig geladen werden.
+            
+            Assert.Fail();
+        }
     }
 }
