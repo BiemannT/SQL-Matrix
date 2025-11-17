@@ -32,6 +32,11 @@
         public abstract List<Input> Inputs { get; }
 
         /// <summary>
+        /// Gets the collection of expected results for the test object.
+        /// </summary>
+        public abstract List<ExcpectedResult> ExceptedResults { get; }
+
+        /// <summary>
         /// Loads the definition from the underlying source.
         /// </summary>
         public abstract void Load();
