@@ -18,10 +18,17 @@
     </TypeIdentifier>
   </Class>
   <Enum Name="BiemannT.MUT.MsSql.Def.Common.SupportedSqlType">
-    <Position X="10.25" Y="0.5" Width="1.75" />
+    <Position X="12.75" Y="0.5" Width="1.75" />
     <TypeIdentifier>
       <HashCode>EAAQUAAAAAAkAAgICAAgAKAAAEAACCQBAEAAAAAoASE=</HashCode>
       <FileName>Common\SupportedSqlType.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="BiemannT.MUT.MsSql.Def.Common.ExpectedResultTypes">
+    <Position X="9" Y="4.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAABgAAAAAAA=</HashCode>
+      <FileName>Common\ExpectedResultTypes.cs</FileName>
     </TypeIdentifier>
   </Enum>
   <Font Name="Segoe UI" Size="9" />
