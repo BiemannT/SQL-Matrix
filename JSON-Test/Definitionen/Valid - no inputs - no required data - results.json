@@ -3,9 +3,9 @@
   "SchemaName": "dbo",
   "TestObjectName": "TestProcedure",
   "MaxExecutionTime": 2,
-  "ExcpectedResults": [
+  "ExpectedResults": [
     {
-      "ExcpectedResultType": "Exception",
+      "ExpectedResultType": "Exception",
       "ExpectedErrorNumber": 515,
       "LastExecutionDateTime": "2025-11-17T18:00:00",
       "LastExecutionDuration": "0:00:00.500"
@@ -23,7 +23,7 @@
       "LastExecutionDuration": "0:01:00.200"
     },
     {
-      "ExpectedResutType": "Resultset",
+      "ExpectedResultType": "Resultset",
       "ExpectedResultSets": [
 
       ],
