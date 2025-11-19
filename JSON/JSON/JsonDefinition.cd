@@ -32,5 +32,12 @@
       <FileName>JSON\JsonExpectedResult.cs</FileName>
     </TypeIdentifier>
   </Class>
+  <Class Name="BiemannT.MUT.MsSql.Def.JSON.JsonSqlValueConverter">
+    <Position X="10.75" Y="2.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>JSON\JsonSqlValueConverter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
   <Font Name="Segoe UI" Size="9" />
 </ClassDiagram>

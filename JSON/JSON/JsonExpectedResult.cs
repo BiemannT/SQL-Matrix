@@ -33,10 +33,9 @@ namespace BiemannT.MUT.MsSql.Def.JSON
         /// <inheritdoc/>
         /// </summary>
         /// <remarks><inheritdoc/></remarks>
-        // TODO: Converter implementieren.
-        // Beispiel: https://learn.microsoft.com/en-us/dotnet/standard/serialization/system-text-json/converters-how-to#deserialize-inferred-types-to-object-properties
         [JsonPropertyName("ExpectedValue")]
         [JsonPropertyOrder(2)]
+        [JsonConverter(typeof(JsonSqlValueConverter))]
         public override object? Value { get; set; }
 
         /// <summary>
