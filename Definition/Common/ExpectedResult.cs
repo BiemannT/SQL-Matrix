@@ -4,7 +4,7 @@
     /// This class provides the base properties and methods to represent one expected result of the test.
     /// </summary>
     /// <remarks>All definition formats must inherit from this class.</remarks>
-    public abstract class ExcpectedResult
+    public abstract class ExpectedResult
     {
         /// <summary>
         /// Gets or sets the type of this expected result.

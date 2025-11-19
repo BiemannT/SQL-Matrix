@@ -3,12 +3,12 @@
   <Class Name="BiemannT.MUT.MsSql.Def.Common.Definition">
     <Position X="1" Y="0.5" Width="2.25" />
     <TypeIdentifier>
-      <HashCode>AAAAgIAAAAAAAAAAAAAAIAIAEAAAAAIAAAAAAAAAUAA=</HashCode>
+      <HashCode>AAAAgMAAAAAAAAAAAAAAIAIAEAAAAAAAAAAAAAAAUAA=</HashCode>
       <FileName>Common\Definition.cs</FileName>
     </TypeIdentifier>
     <ShowAsCollectionAssociation>
       <Property Name="Inputs" />
-      <Property Name="ExceptedResults" />
+      <Property Name="ExpectedResults" />
     </ShowAsCollectionAssociation>
   </Class>
   <Class Name="BiemannT.MUT.MsSql.Def.Common.Input">
@@ -18,11 +18,11 @@
       <FileName>Common\Input.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="BiemannT.MUT.MsSql.Def.Common.ExcpectedResult">
+  <Class Name="BiemannT.MUT.MsSql.Def.Common.ExpectedResult">
     <Position X="5" Y="4.5" Width="2.5" />
     <TypeIdentifier>
       <HashCode>ABAAAAAAAAAAAAAAggAAAAAAABAAAAAAAAAgAAAAAAA=</HashCode>
-      <FileName>Common\ExcpectedResult.cs</FileName>
+      <FileName>Common\ExpectedResult.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
       <Property Name="ResultType" />

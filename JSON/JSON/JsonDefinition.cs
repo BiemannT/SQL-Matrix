@@ -133,9 +133,9 @@ namespace BiemannT.MUT.MsSql.Def.JSON
         /// Gets the collection of expected results.
         /// </summary>
         [JsonIgnore]
-        public override List<ExcpectedResult> ExceptedResults
+        public override List<ExpectedResult> ExpectedResults
         {
-            get => [.. _expectedResults.Cast<ExcpectedResult>()];
+            get => [.. _expectedResults.Cast<ExpectedResult>()];
         }
 
         /// <summary>

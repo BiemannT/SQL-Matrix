@@ -34,7 +34,7 @@
         /// <summary>
         /// Gets the collection of expected results for the test object.
         /// </summary>
-        public abstract List<ExcpectedResult> ExceptedResults { get; }
+        public abstract List<ExpectedResult> ExpectedResults { get; }
 
         /// <summary>
         /// Loads the definition from the underlying source.

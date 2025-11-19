@@ -6,7 +6,7 @@ namespace BiemannT.MUT.MsSql.Def.JSON
     /// <summary>
     /// This class provides properties and methods to represent one expected result of the test in JSON-format.
     /// </summary>
-    public class JsonExpectedResult : ExcpectedResult
+    public class JsonExpectedResult : ExpectedResult
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="JsonExpectedResult"/>-class.
