@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using BiemannT.MUT.MsSql.Def.Common;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace BiemannT.MUT.MsSql.Def.JSON
@@ -18,6 +19,7 @@ namespace BiemannT.MUT.MsSql.Def.JSON
             ObjectName = string.Empty;
             _maxExecutionTime = 10;
             _inputs = [];
+            _expectedResults = [];
         }
 
         /// <summary>
@@ -122,6 +124,20 @@ namespace BiemannT.MUT.MsSql.Def.JSON
         [JsonIgnore]
         public FileInfo? FileName { get; set; }
 
+        [JsonPropertyName("ExpectedResults")]
+        [JsonPropertyOrder(0)]
+        [JsonInclude]
+        private List<JsonExpectedResult> _expectedResults;
+
+        /// <summary>
+        /// Gets the collection of expected results.
+        /// </summary>
+        [JsonIgnore]
+        public override List<ExcpectedResult> ExceptedResults
+        {
+            get => [.. _expectedResults.Cast<ExcpectedResult>()];
+        }
+
         /// <summary>
         /// Loads the content of the JSON definition file, defined in <see cref="FileName"/>.
         /// </summary>
@@ -146,6 +162,7 @@ namespace BiemannT.MUT.MsSql.Def.JSON
                 this.ObjectName = _definition.ObjectName;
                 this._maxExecutionTime = _definition._maxExecutionTime;
                 this._inputs = _definition._inputs;
+                this._expectedResults = _definition._expectedResults;
             }
             catch (JsonException ex)
             {

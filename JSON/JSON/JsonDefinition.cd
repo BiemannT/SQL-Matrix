@@ -3,17 +3,18 @@
   <Class Name="BiemannT.MUT.MsSql.Def.JSON.JsonDefinition">
     <Position X="0.5" Y="0.5" Width="2.5" />
     <TypeIdentifier>
-      <HashCode>AAAAwIAAAAAAAAAAAAAAIAIEEAAAAAAAAAAAAAhAUAA=</HashCode>
+      <HashCode>AIAAwIAAAAAAAAAAAAAAIAIEEAAAAgIAAAAAAABAUAA=</HashCode>
       <FileName>JSON\JsonDefinition.cs</FileName>
     </TypeIdentifier>
     <ShowAsCollectionAssociation>
       <Field Name="_inputs" />
+      <Field Name="_expectedResults" />
     </ShowAsCollectionAssociation>
   </Class>
   <Class Name="BiemannT.MUT.MsSql.Def.JSON.JsonInput">
     <Position X="5.5" Y="0.5" Width="2.75" />
     <TypeIdentifier>
-      <HashCode>gAAAAAAAAAAAAAAAACAAAEAAACAAABAAAAAAAAQCIAI=</HashCode>
+      <HashCode>gAAAAAAAAAAAAAAAACAAAEAAACAAABAAAAAAAAACIAI=</HashCode>
       <FileName>JSON\JsonInput.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -22,6 +23,13 @@
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgA=</HashCode>
       <FileName>JSON\JsonDataConverter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BiemannT.MUT.MsSql.Def.JSON.JsonExpectedResult">
+    <Position X="5.5" Y="4.75" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>ABAAAAAAAAAAAAAAggAAAAAAABAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>JSON\JsonExpectedResult.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Font Name="Segoe UI" Size="9" />
