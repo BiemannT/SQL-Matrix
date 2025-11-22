@@ -1,4 +1,5 @@
 ﻿using BiemannT.MUT.MsSql.Def.Common;
+using System.Data;
 using System.Text.Json.Serialization;
 
 namespace BiemannT.MUT.MsSql.Def.JSON
@@ -41,9 +42,18 @@ namespace BiemannT.MUT.MsSql.Def.JSON
         /// <summary>
         /// <inheritdoc/>
         /// </summary>
+        /// <remarks><inheritdoc/></remarks>
+        [JsonPropertyName("ExpectedResultSets")]
+        [JsonPropertyOrder(3)]
+        [JsonConverter(typeof(JsonSqlResultsetConverter))]
+        public override DataSet ResultSets { get; set; } = new DataSet();
+
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
         /// <value><inheritdoc/></value>
         [JsonPropertyName("LastExecutionDateTime")]
-        [JsonPropertyOrder(3)]
+        [JsonPropertyOrder(10)]
         public override DateTime? LastExecution { get; set; }
 
         /// <summary>
@@ -51,7 +61,7 @@ namespace BiemannT.MUT.MsSql.Def.JSON
         /// </summary>
         /// <value><inheritdoc/></value>
         [JsonPropertyName("LastExecutionDuration")]
-        [JsonPropertyOrder(4)]
+        [JsonPropertyOrder(11)]
         public override TimeSpan? LastDuration { get; set; }
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace BiemannT.MUT.MsSql.Def.Common
+﻿using System.Data;
+
+namespace BiemannT.MUT.MsSql.Def.Common
 {
     /// <summary>
     /// This class provides the base properties and methods to represent one expected result of the test.
@@ -28,6 +30,14 @@
         /// Otherwise this property is ignored and the value is <see langword="null"/>.
         /// </remarks>
         public abstract object? Value { get; set; }
+
+        /// <summary>
+        /// Gets the collection of result sets returned by the executed command.
+        /// </summary>
+        /// <remarks>The returned <see cref="DataSet"/> contains one or more <see cref="DataTable"/>
+        /// objects, each representing a result set produced by the test command.
+        /// </remarks>
+        public abstract DataSet ResultSets { get; set; }
 
         /// <summary>
         /// Gets or sets the timestamp of the last time this test was run,
