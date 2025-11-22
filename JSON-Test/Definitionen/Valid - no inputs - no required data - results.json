@@ -45,7 +45,26 @@
             [
               3,
               "Charlie",
-              "2025-11-03"
+              null
+            ]
+          ]
+        },
+        {
+          "Columns": [
+            "ProductID",
+            "ProductName",
+            "Price"
+          ],
+          "Rows": [
+            [
+              101,
+              "Widget",
+              19.99
+            ],
+            [
+              102,
+              "Gadget",
+              29.99
             ]
           ]
         }
