@@ -21,15 +21,25 @@
   <Class Name="BiemannT.MUT.MsSql.Def.Common.ExpectedResult">
     <Position X="5" Y="4.5" Width="2.5" />
     <TypeIdentifier>
-      <HashCode>ABAAAAAAAAAAAAAAggAAAAAAABAAAAAAAAAgAAAAAAA=</HashCode>
+      <HashCode>ABAAAAAAAAAAAAAAgoAAAAAAABAAAAAAAAAgAAAAAAA=</HashCode>
       <FileName>Common\ExpectedResult.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
       <Property Name="ResultType" />
     </ShowAsAssociation>
   </Class>
+  <Class Name="BiemannT.MUT.MsSql.Def.Common.SqlTypeDefinition">
+    <Position X="10.5" Y="0.5" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAQAAAAAAAAgAAEAAIAAAAAAAAAAAAAAAAAAAAAEAE=</HashCode>
+      <FileName>Common\SqlTypeDefinition.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="SqlType" />
+    </ShowAsAssociation>
+  </Class>
   <Enum Name="BiemannT.MUT.MsSql.Def.Common.SupportedSqlType">
-    <Position X="12.75" Y="0.5" Width="1.75" />
+    <Position X="15.25" Y="0.5" Width="1.75" />
     <TypeIdentifier>
       <HashCode>EAAQUAAAAAAkAAgICAAgAKAAAEAACCQBAEAAAAAoASE=</HashCode>
       <FileName>Common\SupportedSqlType.cs</FileName>
