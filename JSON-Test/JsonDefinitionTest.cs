@@ -139,8 +139,37 @@ namespace BiemannT.MUT.MsSql.Def.JSON.Test
 
             // Bei der Methode Load sollen alle Werte korrekt gelesen werden.
             // Es wird davon ausgegangen, dass die Basis Definitions-Eigenschaften richtig geladen werden.
-            
-            Assert.Fail();
+            TestContext.WriteLine("Actual count of expected results: {0}", jsonTest.ExpectedResults.Count);
+            Assert.AreEqual(4, jsonTest.ExpectedResults.Count);
+
+            // Beispiel Exception Result
+            TestContext.WriteLine("1st result: Type '{0}' - Error Number: '{1}' - Timestamp: '{2}' - Duration: '{3}'", jsonTest.ExpectedResults[0].ResultType.ToString(), jsonTest.ExpectedResults[0].ErrorNumber.ToString(), jsonTest.ExpectedResults[0].LastExecution.ToString(), jsonTest.ExpectedResults[0].LastDuration.ToString());
+            Assert.AreEqual(ExpectedResultTypes.Exception, jsonTest.ExpectedResults[0].ResultType);
+            Assert.AreEqual(515, jsonTest.ExpectedResults[0].ErrorNumber);
+            Assert.AreEqual(new DateTime(2025, 11, 17, 18, 0, 0), jsonTest.ExpectedResults[0].LastExecution);
+            Assert.AreEqual(new TimeSpan(0, 0, 0, 0, 500), jsonTest.ExpectedResults[0].LastDuration);
+
+            // Beispiel Value Result
+            TestContext.WriteLine("2nd result: Type '{0}' - Value: '{1}' - Timestamp: '{2}' - Duration: '{3}'", jsonTest.ExpectedResults[1].ResultType.ToString(), jsonTest.ExpectedResults[1].Value?.ToString() ?? "null", jsonTest.ExpectedResults[1].LastExecution.ToString(), jsonTest.ExpectedResults[1].LastDuration.ToString());
+            Assert.AreEqual(Common.ExpectedResultTypes.Value, jsonTest.ExpectedResults[1].ResultType);
+            Assert.IsInstanceOfType(jsonTest.ExpectedResults[1].Value, typeof(decimal));
+            Assert.AreEqual(-10.245m, jsonTest.ExpectedResults[1].Value);
+            Assert.AreEqual(new DateTime(2025, 11, 17, 19, 0, 0), jsonTest.ExpectedResults[1].LastExecution);
+            Assert.AreEqual(new TimeSpan(0, 0, 0, 1, 100), jsonTest.ExpectedResults[1].LastDuration);
+
+            // Beispiel String Result
+            TestContext.WriteLine("3rd result: Type '{0}' - Value: '{1}' - Timestamp: '{2}' - Duration: '{3}'", jsonTest.ExpectedResults[2].ResultType.ToString(), jsonTest.ExpectedResults[2].Value?.ToString() ?? "null", jsonTest.ExpectedResults[2].LastExecution.ToString(), jsonTest.ExpectedResults[2].LastDuration.ToString());
+            Assert.AreEqual(ExpectedResultTypes.Value, jsonTest.ExpectedResults[2].ResultType);
+            Assert.AreEqual("Test", jsonTest.ExpectedResults[2].Value);
+            Assert.AreEqual(new DateTime(2025, 11, 17, 20, 0, 0), jsonTest.ExpectedResults[2].LastExecution);
+            Assert.AreEqual(new TimeSpan(0, 0, 1, 0, 200), jsonTest.ExpectedResults[2].LastDuration);
+
+            // Beispiel einzelnes Resultset
+            Assert.AreEqual(ExpectedResultTypes.Resultset, jsonTest.ExpectedResults[3].ResultType);
+            Assert.IsTrue(jsonTest.ExpectedResults[3].LastExecution is null);
+            Assert.IsTrue(jsonTest.ExpectedResults[3].LastDuration is null);
+
+            Assert.Fail("Assert Prüfungen vervollständigen.");
         }
     }
 }
