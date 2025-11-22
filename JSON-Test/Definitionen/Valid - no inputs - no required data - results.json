@@ -25,7 +25,30 @@
     {
       "ExpectedResultType": "Resultset",
       "ExpectedResultSets": [
-
+        {
+          "Columns": [
+            "ID",
+            "Name",
+            "Date"
+          ],
+          "Rows": [
+            [
+              1,
+              "Alice",
+              "2025-11-01"
+            ],
+            [
+              2,
+              "Bob",
+              "2025-11-02"
+            ],
+            [
+              3,
+              "Charlie",
+              "2025-11-03"
+            ]
+          ]
+        }
       ],
       "LastExecutionDateTime": null,
       "LastExecutionDuration": null
