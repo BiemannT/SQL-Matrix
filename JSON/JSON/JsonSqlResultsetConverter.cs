@@ -188,7 +188,19 @@ namespace BiemannT.MUT.MsSql.Def.JSON
                         {
                             JsonSqlValueConverter converter = new();
                             object? cellValue = converter.Read(ref reader, typeof(object), options);
-                            row[columnIndex++] = cellValue;
+                            try
+                            {
+                                // Versuchen den Wert in die Spalte einzutragen
+                                row[columnIndex++] = cellValue;
+                            }
+                            catch (ArgumentException ex)
+                            {
+                                throw new JsonException($"Error converting value '{cellValue}' to type of column '{table.Columns[columnIndex - 1].ColumnName}'.", ex);
+                            }
+                            catch
+                            {
+                                throw;
+                            }
                             reader.Read();
                         }
                         table.Rows.Add(row);
