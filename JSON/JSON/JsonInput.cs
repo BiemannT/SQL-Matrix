@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using BiemannT.MUT.MsSql.Def.Common;
+using System.Data;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -7,7 +8,7 @@ namespace BiemannT.MUT.MsSql.Def.JSON
     /// <summary>
     /// This class provides properties and methods to represent a definition of a parameter requested by the test object in JSON-format.
     /// </summary>
-    public class JsonInput : Common.Input
+    public class JsonInput : Input
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="JsonInput"/>-class.
@@ -15,7 +16,7 @@ namespace BiemannT.MUT.MsSql.Def.JSON
         public JsonInput()
         {
             ParameterName = string.Empty;
-            _sqlTypeDefinition = string.Empty;
+            SqlTypeDef = new SqlTypeDefinition();
             IsNullable = true;
             HasDefaultValue = false;
             Direction = ParameterDirection.Input;
@@ -31,37 +32,11 @@ namespace BiemannT.MUT.MsSql.Def.JSON
         [JsonRequired]
         public override string ParameterName { get; set; }
 
-        private string _sqlTypeDefinition;
-
-        /// <summary>
-        /// Gets or sets the SQL-Server parameter type.
-        /// </summary>
-        /// <remarks>If the parameter type will be changed the <see cref="UserValues"/>-list will be cleared.</remarks>
         [JsonPropertyName("SqlType")]
         [JsonPropertyOrder(-9)]
         [JsonRequired]
-        public override string SqlTypeDefinition
-        {
-            get => _sqlTypeDefinition;
-            set
-            {
-                // Liste mit benutzerdefinierten Werten zurücksetzen wenn der Parameter-Typ geändert wird.
-                if (this._sqlTypeDefinition != value) this.UserValues.Clear();
-
-                _sqlTypeDefinition = value;
-                // SQL-Typ analysieren
-                try
-                {
-                    base.IdentifySqlType();
-                }
-                catch
-                {
-                    // Fehler bei der Analyse ignorieren
-                    // Im Fehlerfall bleibt der SqlType auf NotSupported
-                    // TODO: Mögliche Fehlermeldungen in die Ausgabe integrieren
-                }
-            }
-        }
+        [JsonConverter(typeof(JsonSqlTypeDefConverter))]
+        public override SqlTypeDefinition SqlTypeDef { get; set; }
 
         /// <summary>
         /// Gets or sets if a NULL-value is allowed for this parameter.
@@ -133,7 +108,7 @@ namespace BiemannT.MUT.MsSql.Def.JSON
 
                     try
                     {
-                        UserValues.Add(JsonDataConverter.JsonToSql(jsonElement, SqlType));
+                        UserValues.Add(JsonDataConverter.JsonToSql(jsonElement, SqlTypeDef.SqlType));
                     }
                     catch
                     {
