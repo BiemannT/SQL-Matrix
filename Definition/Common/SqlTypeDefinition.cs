@@ -54,10 +54,108 @@ namespace BiemannT.MUT.MsSql.Def.Common
         /// </summary>
         public byte Scale { get; set; }
 
+        /// <summary>
+        /// Returns a <see langword="string"/> that represents the SQL data type definition, including type name and any applicable size,
+        /// precision, or scale parameters.
+        /// </summary>
+        /// <remarks>The returned string follows SQL Server syntax conventions. For types that support a
+        /// size, precision, or scale, these values are included in parentheses. For variable-length types supporting
+        /// 'MAX', '(MAX)' is appended when appropriate. If the type is 'DECIMAL', both precision and scale are included
+        /// if specified. For time-related types, scale is included if greater than zero.</remarks>
+        /// <returns>
+        /// A <see langword="string"/> containing the SQL type name and parameters formatted as a SQL type declaration.
+        /// In case the parameters size, precision or scale are invalid, the type name without parameters is returned.
+        /// </returns>
         public override string ToString()
         {
-            // TODO: Implement string representation of the SQL type definition
-            throw new NotImplementedException();
+            string output = SqlType switch
+            {
+                SupportedSqlType.Binary => "BINARY",
+                SupportedSqlType.VarBinary => "VARBINARY",
+                SupportedSqlType.Char => "CHAR",
+                SupportedSqlType.VarChar => "VARCHAR",
+                SupportedSqlType.NChar => "NCHAR",
+                SupportedSqlType.NVarChar => "NVARCHAR",
+                SupportedSqlType.UniqueIdentifier => "UNIQUEIDENTIFIER",
+                SupportedSqlType.Bit => "BIT",
+                SupportedSqlType.TinyInt => "TINYINT",
+                SupportedSqlType.SmallInt => "SMALLINT",
+                SupportedSqlType.Int => "INT",
+                SupportedSqlType.BigInt => "BIGINT",
+                SupportedSqlType.SmallMoney => "SMALLMONEY",
+                SupportedSqlType.Money => "MONEY",
+                SupportedSqlType.Decimal => "DECIMAL",
+                SupportedSqlType.Real => "REAL",
+                SupportedSqlType.Float => "FLOAT",
+                SupportedSqlType.Time => "TIME",
+                SupportedSqlType.Date => "DATE",
+                SupportedSqlType.SmallDateTime => "SMALLDATETIME",
+                SupportedSqlType.DateTime => "DATETIME",
+                SupportedSqlType.DateTime2 => "DATETIME2",
+                SupportedSqlType.DateTimeOffset => "DATETIMEOFFSET",
+                _ => string.Empty
+            };
+
+            // Bei einem nicht unterstützten Typ gleich string.Empty zurückgeben
+            if (string.IsNullOrEmpty(output)) return output;
+
+            // Optional noch die Größenparameter anhängen
+            // Folgende Typen unterstützen MAX:
+            // VARBINARY, VARCHAR, NVARCHAR
+            if (Size == -1 && 
+                SqlType == SupportedSqlType.VarBinary ||
+                SqlType == SupportedSqlType.VarChar ||
+                SqlType == SupportedSqlType.NVarChar)
+            {
+                output = string.Concat(output, "(MAX)");
+                return output;
+            }
+
+            // Folgende Typen unterstützen Size:
+            // BINARY, VARBINARY, CHAR, VARCHAR, NCHAR, NVARCHAR, FLOAT
+            else if (Size > 0 &&
+                    SqlType == SupportedSqlType.Binary ||
+                    SqlType == SupportedSqlType.VarBinary ||
+                    SqlType == SupportedSqlType.Char ||
+                    SqlType == SupportedSqlType.VarChar ||
+                    SqlType == SupportedSqlType.NChar ||
+                    SqlType == SupportedSqlType.NVarChar ||
+                    SqlType == SupportedSqlType.Float)
+            {
+                output = string.Concat(output, "(", Size.ToString(), ")");
+                return output;
+            }
+
+            // Beim Decimal-Typ können optional noch Precision und Scale angegeben werden
+            // Scale kann nur angegeben werden, wenn auch Precision angegeben wurde
+            if (SqlType == SupportedSqlType.Decimal)
+            {
+                if (Precision > 0)
+                {
+                    if (Scale > 0)
+                    {
+                        output = string.Concat(output, "(", Precision.ToString(), ", ", Scale.ToString(), ")");
+                    }
+                    else if (Scale == 0)
+                    {
+                        output = string.Concat(output, "(", Precision.ToString(), ")");
+                    }
+                    return output;
+                }
+            }
+
+            // Bei den Zeit-Datentypen kann optional noch die Scale angegeben werden
+            if (Scale > 0 &&
+                SqlType == SupportedSqlType.Time ||
+                SqlType == SupportedSqlType.DateTime2 ||
+                SqlType == SupportedSqlType.DateTimeOffset)
+            {
+                output = string.Concat(output, "(", Scale.ToString(), ")");
+                return output;
+            }
+
+            // Als Fallback wird nur der Typname zurückgegeben
+            return output;
         }
 
         /// <summary>
