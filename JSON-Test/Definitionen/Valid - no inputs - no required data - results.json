@@ -27,9 +27,18 @@
       "ExpectedResultSets": [
         {
           "Columns": [
-            "ID",
-            "Name",
-            "Date"
+            {
+              "Name": "ID",
+              "DataType": "INT"
+            },
+            {
+              "Name": "Name",
+              "DataType": "VARCHAR(100)"
+            },
+            {
+              "Name": "Date",
+              "DataType": "DATE"
+            }
           ],
           "Rows": [
             [
@@ -51,9 +60,18 @@
         },
         {
           "Columns": [
-            "ProductID",
-            "ProductName",
-            "Price"
+            {
+              "Name": "ProductID",
+              "DataType": "INT"
+            },
+            {
+              "Name": "ProductName",
+              "DataType": "VARCHAR(100)"
+            },
+            {
+              "Name": "Price",
+              "DataType": "SMALLMONEY"
+            }
           ],
           "Rows": [
             [
