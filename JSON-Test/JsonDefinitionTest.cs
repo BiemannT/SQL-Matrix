@@ -165,11 +165,39 @@ namespace BiemannT.MUT.MsSql.Def.JSON.Test
             Assert.AreEqual(new TimeSpan(0, 0, 1, 0, 200), jsonTest.ExpectedResults[2].LastDuration);
 
             // Beispiel einzelnes Resultset
+            TestContext.WriteLine("4th result: Type '{0}' - Resultsets count: '{1}'", jsonTest.ExpectedResults[3].ResultType.ToString(), jsonTest.ExpectedResults[3].ResultSets.Tables.Count);
             Assert.AreEqual(ExpectedResultTypes.Resultset, jsonTest.ExpectedResults[3].ResultType);
             Assert.IsTrue(jsonTest.ExpectedResults[3].LastExecution is null);
             Assert.IsTrue(jsonTest.ExpectedResults[3].LastDuration is null);
+            Assert.AreEqual(2, jsonTest.ExpectedResults[3].ResultSets.Tables.Count);
 
-            Assert.Fail("Assert Prüfungen vervollständigen.");
+            // Erste Tabelle des Resultsets prüfen
+            // Überschriften prüfen
+            Assert.AreEqual(3, jsonTest.ExpectedResults[3].ResultSets.Tables[0].Columns.Count);
+            Assert.AreEqual("ID", jsonTest.ExpectedResults[3].ResultSets.Tables[0].Columns[0].ColumnName);
+            Assert.AreEqual(typeof(int) ,jsonTest.ExpectedResults[3].ResultSets.Tables[0].Columns[0].DataType);
+            Assert.AreEqual("Name", jsonTest.ExpectedResults[3].ResultSets.Tables[0].Columns[1].ColumnName);
+            Assert.AreEqual(typeof(string), jsonTest.ExpectedResults[3].ResultSets.Tables[0].Columns[1].DataType);
+            Assert.AreEqual("Date", jsonTest.ExpectedResults[3].ResultSets.Tables[0].Columns[2].ColumnName);
+            Assert.AreEqual(typeof(DateTime), jsonTest.ExpectedResults[3].ResultSets.Tables[0].Columns[2].DataType);
+
+            // Zeilen prüfen
+            Assert.AreEqual(3, jsonTest.ExpectedResults[3].ResultSets.Tables[0].Rows.Count);
+
+            // Erste Zeile prüfen
+            Assert.AreEqual(1, jsonTest.ExpectedResults[3].ResultSets.Tables[0].Rows[0]["ID"]);
+            Assert.AreEqual("Alice", jsonTest.ExpectedResults[3].ResultSets.Tables[0].Rows[0]["Name"]);
+            Assert.AreEqual(new DateTime(2025, 11, 01), jsonTest.ExpectedResults[3].ResultSets.Tables[0].Rows[0]["Date"]);
+
+            // Zweite Zeile prüfen
+            Assert.AreEqual(2, jsonTest.ExpectedResults[3].ResultSets.Tables[0].Rows[1]["ID"]);
+            Assert.AreEqual("Bob", jsonTest.ExpectedResults[3].ResultSets.Tables[0].Rows[1]["Name"]);
+            Assert.AreEqual(new DateTime(2025, 11, 02), jsonTest.ExpectedResults[3].ResultSets.Tables[0].Rows[1]["Date"]);
+
+            // Dritte Zeile prüfen
+            Assert.AreEqual(3, jsonTest.ExpectedResults[3].ResultSets.Tables[0].Rows[2]["ID"]);
+            Assert.AreEqual("Charlie", jsonTest.ExpectedResults[3].ResultSets.Tables[0].Rows[2]["Name"]);
+            Assert.IsTrue(jsonTest.ExpectedResults[3].ResultSets.Tables[0].Rows[2]["Date"] is DBNull);
         }
     }
 }
