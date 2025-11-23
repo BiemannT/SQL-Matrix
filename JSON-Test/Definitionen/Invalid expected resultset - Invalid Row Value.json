@@ -1,0 +1,38 @@
+{
+  "SQL-Matrix-Api-Version": "v1",
+  "SchemaName": "dbo",
+  "TestObjectName": "TestProcedure",
+  "MaxExecutionTime": 2,
+  "ExpectedResults": [
+    {
+      "ExpectedResultType": "Resultset",
+      "ExpectedResultSets": [
+        {
+          "Columns": [
+            {
+              "Name": "ID",
+              "DataType": "INT"
+            },
+            {
+              "Name": "Name",
+              "DataType": "VARCHAR(100)"
+            },
+            {
+              "Name": "Date",
+              "DataType": "DATE"
+            }
+          ],
+          "Rows": [
+            [
+              "Fehler",
+              "Alice",
+              "2023-10-01"
+            ]
+          ]
+        }
+      ],
+      "LastExecutionDateTime": "2025-11-17T20:00:00",
+      "LastExecutionDuration": "0:01:00.200"
+    }
+  ]
+}
