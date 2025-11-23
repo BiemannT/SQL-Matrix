@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using BiemannT.MUT.MsSql.Def.Common;
+using System.Data;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -14,7 +15,7 @@ namespace BiemannT.MUT.MsSql.Def.JSON
         /// represents a <see cref="DataTable"/> with defined columns and rows.
         /// </summary>
         /// <remarks>The JSON input must be an array of objects, where each object contains a 'Columns'
-        /// property (an array of column names) and a 'Rows' property (an array of row values). The method expects the
+        /// property (an array of column definitions) and a 'Rows' property (an array of row values). The method expects the
         /// 'Columns' property to appear first in each object, followed by the 'Rows' property. This method does not
         /// support nested tables or additional properties beyond 'Columns' and 'Rows'.</remarks>
         /// <param name="reader">A reference to the <see cref="Utf8JsonReader"/> positioned at the start of the JSON array to read. The
@@ -67,14 +68,88 @@ namespace BiemannT.MUT.MsSql.Def.JSON
 
                     while (reader.TokenType != JsonTokenType.EndArray)
                     {
-                        // Als Spaltennamen werden String-Werte erwartet
-                        if (reader.TokenType != JsonTokenType.String)
+                        // Spaltendefinitionen sind in Objects definiert
+                        if (reader.TokenType != JsonTokenType.StartObject)
                         {
-                            throw new JsonException("Expected String token for Column name of ExpectedResultSet.");
+                            throw new JsonException("Expected StartObject token for Column definition of ExpectedResultSet.");
                         }
 
-                        string columnName = reader.GetString() ?? "UnnamedColumn";
-                        table.Columns.Add(columnName);
+                        reader.Read();
+
+                        while (reader.TokenType != JsonTokenType.EndObject)
+                        {
+                            DataColumn column = new();
+
+                            // Eigenschaft "Name" wird als string erwartet und stellt den Spaltennamen dar
+                            if (reader.TokenType == JsonTokenType.PropertyName && reader.GetString() == "Name")
+                            {
+                                reader.Read();
+                                if (reader.TokenType != JsonTokenType.String)
+                                {
+                                    throw new JsonException("Expected String token for Column name of ExpectedResultSet.");
+                                }
+                                column.ColumnName = reader.GetString() ?? "UnnamedColumn";
+                                reader.Read();
+                            }
+
+                            // Eigenschaft "DataType" wird als string erwartet und stellt den Datentyp für die Spalte dar
+                            if (reader.TokenType == JsonTokenType.PropertyName && reader.GetString() == "DataType")
+                            {
+                                reader.Read();
+                                if (reader.TokenType != JsonTokenType.String)
+                                {
+                                    throw new JsonException("Expected String token for Column DataType of ExpectedResultSet.");
+                                }
+
+                                // Den Sql Typ aus dem String konvertieren
+                                JsonSqlTypeDefConverter typeConverter = new();
+                                SqlTypeDefinition sqlTypeDef = typeConverter.Read(ref reader, typeof(SqlTypeDefinition), options);
+
+                                // Den entsprechenden .NET-Datentyp aus der SqlTypeDefinition ableiten
+                                Type netType = sqlTypeDef.SqlType switch
+                                {
+                                    SupportedSqlType.Int => typeof(int),
+                                    SupportedSqlType.BigInt => typeof(long),
+                                    SupportedSqlType.SmallInt => typeof(short),
+                                    SupportedSqlType.TinyInt => typeof(byte),
+                                    SupportedSqlType.Bit => typeof(bool),
+                                    SupportedSqlType.Decimal => typeof(decimal),
+                                    SupportedSqlType.Float => typeof(double),
+                                    SupportedSqlType.Real => typeof(Single),
+                                    SupportedSqlType.DateTime => typeof(DateTime),
+                                    SupportedSqlType.DateTime2 => typeof(DateTime),
+                                    SupportedSqlType.DateTimeOffset => typeof(DateTimeOffset),
+                                    SupportedSqlType.SmallDateTime => typeof(DateTime),
+                                    SupportedSqlType.Date => typeof(DateTime),
+                                    SupportedSqlType.Time => typeof(TimeSpan),
+                                    SupportedSqlType.SmallMoney => typeof(decimal),
+                                    SupportedSqlType.Money => typeof(decimal),
+                                    SupportedSqlType.Char => typeof(string),
+                                    SupportedSqlType.VarChar => typeof(string),
+                                    SupportedSqlType.NChar => typeof(string),
+                                    SupportedSqlType.NVarChar => typeof(string),
+                                    SupportedSqlType.UniqueIdentifier => typeof(Guid),
+                                    SupportedSqlType.Binary => typeof(byte[]),
+                                    SupportedSqlType.VarBinary => typeof(byte[]),
+                                    _ => typeof(object)
+                                };
+
+                                column.DataType = netType;
+                                reader.Read();
+                            }
+                            else
+                            {
+                                // Unbekannte Eigenschaft innerhalb der Spaltendefinition überspringen
+                                reader.Skip();
+                            }
+
+                            // Mindestens der Spaltenname muss definiert sein, um die Spalte hinzuzufügen
+                            if (!string.IsNullOrEmpty(column.ColumnName))
+                            {
+                                table.Columns.Add(column);
+                            }
+                        }
+
                         reader.Read();
                     }
 
