@@ -199,5 +199,24 @@ namespace BiemannT.MUT.MsSql.Def.JSON.Test
             Assert.AreEqual("Charlie", jsonTest.ExpectedResults[3].ResultSets.Tables[0].Rows[2]["Name"]);
             Assert.IsTrue(jsonTest.ExpectedResults[3].ResultSets.Tables[0].Rows[2]["Date"] is DBNull);
         }
+
+        /// <summary>
+        /// Test loading of a definition file with an invalid expected resultset.
+        /// The data type of a column is invalid (number instead of a string).
+        /// </summary>
+        [TestMethod]
+        public void Test_LoadInvalid_ExpectedResultset_InvalidType()
+        {
+            Definition jsonTest = new JsonDefinition()
+            {
+                FileName = new("./Definitionen/Invalid expected resultset - Invalid type.json")
+            };
+
+            // Bei der Methode Load wird eine Exception erwartet mit der Nachricht, dass im Resultset ein ungültiger Datentyp verwendet wird.
+            Exception result = Assert.ThrowsException<InvalidOperationException>(jsonTest.Load);
+            Assert.IsInstanceOfType(result.InnerException, typeof(JsonException));
+            StringAssert.StartsWith(result.InnerException.Message, "Expected String token for Column DataType of ExpectedResultSet.");
+            Assert.AreEqual(21, ((JsonException)result.InnerException).LineNumber);
+        }
     }
 }
