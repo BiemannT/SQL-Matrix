@@ -25,6 +25,7 @@ namespace BiemannT.MUT.MsSql.Def.JSON
         /// Will be thrown, if the input <paramref name="data"/> cannot be parsed into the equivalent .NET type.
         /// See the inner Exception for further details.
         /// </exception>
+        [Obsolete("This method will be removed in future versions. Please use the JsonSqlValueConverter class instead.", false)]
         public static object JsonToSql(JsonElement data, Common.SupportedSqlType expectedSqlType)
         {
             // Fehlermeldung für eine fehlerhafte Konvertierung
