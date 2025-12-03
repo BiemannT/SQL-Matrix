@@ -187,15 +187,16 @@ namespace BiemannT.MUT.MsSql.Def.JSON
                         while (reader.TokenType != JsonTokenType.EndArray)
                         {
                             JsonSqlValueConverter converter = new();
-                            object? cellValue = converter.Read(ref reader, typeof(object), options);
+                            Type targetType = table.Columns[columnIndex].DataType;
                             try
                             {
+                                object cellValue = converter.Read(ref reader, targetType, options);
                                 // Versuchen den Wert in die Spalte einzutragen
                                 row[columnIndex++] = cellValue;
                             }
                             catch (ArgumentException ex)
                             {
-                                throw new JsonException($"Error converting value '{cellValue}' to type of column '{table.Columns[columnIndex - 1].ColumnName}'.", ex);
+                                throw new JsonException($"Error converting resultset value to type of column '{table.Columns[columnIndex - 1].ColumnName}'.", ex);
                             }
                             catch
                             {
