@@ -27,13 +27,8 @@ namespace BiemannT.MUT.MsSql.Def.JSON
         /// <param name="options">An object that specifies serialization options to use.</param>
         /// <exception cref="JsonException">Will be thrown if the JSON value cannot be converted to the target type.</exception>"
         /// <returns><inheritdoc/></returns>
-        public override object? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        public override object Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            // TODO: Die Variable typeToConvert nutzen um eine zielgerichtete Konvertierung durchzuführen.
-            // Nur wenn typeToConvert == typeof(object) ist, dann die hier implementierte Logik verwenden.
-            // Wenn jedoch der Reader-Wert nicht in den typeToConvert passt, dann eine Exception werfen.
-            // Dadurch soll die statische Methode JsonDataConverter.JsonToSql() ersetzt werden.
-
             // Je nach TokenType den passenden .NET-Typ zurückgeben
             // Im Fall von null soll bei jedem Datentyp DBNull.Value zurückgegeben werden
             if (reader.TokenType == JsonTokenType.Null)
@@ -148,7 +143,7 @@ namespace BiemannT.MUT.MsSql.Def.JSON
 
                 if (typeToConvert == typeof(string) || typeToConvert == typeof(object))
                 {
-                    return reader.GetString();
+                    return reader.GetString() ?? string.Empty;
                 }
             }
 
@@ -157,7 +152,7 @@ namespace BiemannT.MUT.MsSql.Def.JSON
                 ? string.Concat("'", reader.GetString()?[..20], "...'")
                 : string.Concat("'", reader.GetString(), "'");
 
-            throw new JsonException($"The JSON value '{ValueErrorMessage}' cannot be converted to the target type '{typeToConvert.FullName}'.");
+            throw new JsonException($"The JSON value {ValueErrorMessage} cannot be converted to the target type '{typeToConvert.FullName}'.");
         }
 
         /// <summary>
