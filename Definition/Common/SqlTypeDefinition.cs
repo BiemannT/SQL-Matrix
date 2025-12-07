@@ -102,10 +102,10 @@ namespace BiemannT.MUT.MsSql.Def.Common
             // Optional noch die Größenparameter anhängen
             // Folgende Typen unterstützen MAX:
             // VARBINARY, VARCHAR, NVARCHAR
-            if (Size == -1 && 
+            if (Size == -1 && (
                 SqlType == SupportedSqlType.VarBinary ||
                 SqlType == SupportedSqlType.VarChar ||
-                SqlType == SupportedSqlType.NVarChar)
+                SqlType == SupportedSqlType.NVarChar))
             {
                 output = string.Concat(output, "(MAX)");
                 return output;
@@ -113,14 +113,14 @@ namespace BiemannT.MUT.MsSql.Def.Common
 
             // Folgende Typen unterstützen Size:
             // BINARY, VARBINARY, CHAR, VARCHAR, NCHAR, NVARCHAR, FLOAT
-            else if (Size > 0 &&
+            else if (Size > 0 && (
                     SqlType == SupportedSqlType.Binary ||
                     SqlType == SupportedSqlType.VarBinary ||
                     SqlType == SupportedSqlType.Char ||
                     SqlType == SupportedSqlType.VarChar ||
                     SqlType == SupportedSqlType.NChar ||
                     SqlType == SupportedSqlType.NVarChar ||
-                    SqlType == SupportedSqlType.Float)
+                    SqlType == SupportedSqlType.Float))
             {
                 output = string.Concat(output, "(", Size.ToString(), ")");
                 return output;
@@ -145,10 +145,10 @@ namespace BiemannT.MUT.MsSql.Def.Common
             }
 
             // Bei den Zeit-Datentypen kann optional noch die Scale angegeben werden
-            if (Scale > 0 &&
+            if (Scale > 0 && (
                 SqlType == SupportedSqlType.Time ||
                 SqlType == SupportedSqlType.DateTime2 ||
-                SqlType == SupportedSqlType.DateTimeOffset)
+                SqlType == SupportedSqlType.DateTimeOffset))
             {
                 output = string.Concat(output, "(", Scale.ToString(), ")");
                 return output;
