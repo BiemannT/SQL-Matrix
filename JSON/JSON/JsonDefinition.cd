@@ -2,61 +2,74 @@
 <ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
   <Class Name="BiemannT.MUT.MsSql.Def.JSON.JsonDefinition">
     <Position X="0.5" Y="0.5" Width="2.5" />
+    <AssociationLine Name="JsonInputs" Type="BiemannT.MUT.MsSql.Def.JSON.JsonInput">
+      <MemberNameLabel ManuallyPlaced="true" ManuallySized="true">
+        <Position X="0.11" Y="0.06" Height="0.182" Width="1.912" />
+      </MemberNameLabel>
+    </AssociationLine>
     <TypeIdentifier>
       <HashCode>AIAAwMAAAAAAABAAAAAAIAIAEAAAAgAAAAAAAABAUAA=</HashCode>
       <FileName>JSON\JsonDefinition.cs</FileName>
     </TypeIdentifier>
     <ShowAsCollectionAssociation>
       <Field Name="_expectedResults" />
+      <Property Name="JsonInputs" />
     </ShowAsCollectionAssociation>
   </Class>
   <Class Name="BiemannT.MUT.MsSql.Def.JSON.JsonExpectedResult">
-    <Position X="5.5" Y="4.75" Width="2.75" />
+    <Position X="5.5" Y="6.25" Width="2.75" />
     <TypeIdentifier>
       <HashCode>ABAAAAAAAAAAAAAAgoAAAAAAABAAAAAAAAAgAAAAAAA=</HashCode>
       <FileName>JSON\JsonExpectedResult.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="BiemannT.MUT.MsSql.Def.JSON.JsonSqlValueConverter">
-    <Position X="11.5" Y="2.5" Width="2.5" />
+    <Position X="12" Y="2.5" Width="2.5" />
     <TypeIdentifier>
       <HashCode>EAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAEAAAA=</HashCode>
       <FileName>JSON\JsonSqlValueConverter.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="BiemannT.MUT.MsSql.Def.JSON.JsonSqlResultsetConverter">
-    <Position X="11.5" Y="6.75" Width="2.5" />
+    <Position X="12" Y="6.75" Width="2.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAEAAAA=</HashCode>
       <FileName>JSON\JsonSqlResultsetConverter.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="BiemannT.MUT.MsSql.Def.JSON.JsonSqlTypeDefConverter">
-    <Position X="11.5" Y="0.5" Width="2.5" />
+    <Position X="12" Y="0.5" Width="2.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAEAAAA=</HashCode>
       <FileName>JSON\JsonSqlTypeDefConverter.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="BiemannT.MUT.MsSql.Def.JSON.JsonInput">
-    <Position X="4.25" Y="0.5" Width="2.75" />
+    <Position X="5.25" Y="2.5" Width="2.75" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAACAAAEAAACAAABQAAAAAAAAAIAA=</HashCode>
       <FileName>JSON\JsonInput.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="BiemannT.MUT.MsSql.Def.JSON.JsonInputDirectionConverter">
-    <Position X="7.75" Y="0.5" Width="2.75" />
+    <Position X="8.5" Y="2.5" Width="2.75" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAEAAAA=</HashCode>
       <FileName>JSON\JsonInputDirectionConverter.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="BiemannT.MUT.MsSql.Def.JSON.JsonSqlValueListConverter">
-    <Position X="11.5" Y="4.75" Width="2.5" />
+    <Position X="12" Y="4.75" Width="2.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAEAAAA=</HashCode>
       <FileName>JSON\JsonSqlValueListConverter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BiemannT.MUT.MsSql.Def.JSON.JsonApiVersionConverter">
+    <Position X="5.25" Y="0.5" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAEAAAA=</HashCode>
+      <FileName>JSON\JsonApiVersionConverter.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Font Name="Segoe UI" Size="9" />
