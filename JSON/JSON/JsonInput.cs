@@ -1,6 +1,5 @@
 ﻿using BiemannT.MUT.MsSql.Def.Common;
 using System.Data;
-using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace BiemannT.MUT.MsSql.Def.JSON
@@ -13,110 +12,84 @@ namespace BiemannT.MUT.MsSql.Def.JSON
         /// <summary>
         /// Initializes a new instance of the <see cref="JsonInput"/>-class.
         /// </summary>
-        public JsonInput()
-        {
-            ParameterName = string.Empty;
-            SqlTypeDef = new SqlTypeDefinition();
-            IsNullable = true;
-            HasDefaultValue = false;
-            Direction = ParameterDirection.Input;
-            UserValues = [];
-            UserValuesJson = [];
-        }
+        public JsonInput() : base() { }
 
         /// <summary>
-        /// Gets or sets the name of the parameter.
+        /// <inheritdoc/>
         /// </summary>
+        /// <remarks><inheritdoc/></remarks>
         [JsonPropertyName("ParameterName")]
         [JsonPropertyOrder(-10)]
         [JsonRequired]
-        public override string ParameterName { get; set; }
+        public override string ParameterName
+        {
+            get => base.ParameterName;
+            set => base.ParameterName = value;
+        }
 
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        /// <remarks><inheritdoc/></remarks>
         [JsonPropertyName("SqlType")]
         [JsonPropertyOrder(-9)]
         [JsonRequired]
         [JsonConverter(typeof(JsonSqlTypeDefConverter))]
-        public override SqlTypeDefinition SqlTypeDef { get; set; }
+        public override SqlTypeDefinition SqlTypeDef
+        {
+            get => base.SqlTypeDef;
+            set => base.SqlTypeDef = value;
+        }
 
         /// <summary>
-        /// Gets or sets if a NULL-value is allowed for this parameter.
+        /// <inheritdoc/>
         /// </summary>
-        /// <remarks>Default is <see langword="true"/>.</remarks>
+        /// <remarks><inheritdoc/></remarks>
         [JsonPropertyName("Nullable")]
         [JsonPropertyOrder(-8)]
-        public override bool IsNullable { get; set; }
+        public override bool IsNullable
+        {
+            get => base.IsNullable;
+            set => base.IsNullable = value;
+        }
 
         /// <summary>
-        /// Gets or sets if a DEFAULT-value is available for this parameter.
+        /// <inheritdoc/>
         /// </summary>
-        /// <remarks>Default is <see langword="false"/>.</remarks>
+        /// <remarks><inheritdoc/></remarks>
         [JsonPropertyName("Default")]
         [JsonPropertyOrder(-7)]
-        public override bool HasDefaultValue { get; set; }
+        public override bool HasDefaultValue
+        {
+            get => base.HasDefaultValue;
+            set => base.HasDefaultValue = value;
+        }
 
         /// <summary>
-        /// Gets or sets the direction of the parameter.
+        /// <inheritdoc/>
         /// </summary>
-        /// <remarks>Default is <see cref="ParameterDirection.Input"/>.</remarks>
+        /// <remarks><inheritdoc/></remarks>
         [JsonPropertyName("Direction")]
         [JsonPropertyOrder(-6)]
-        public override ParameterDirection Direction { get; set; }
+        [JsonConverter(typeof(JsonInputDirectionConverter))]
+        public override ParameterDirection Direction
+        {
+            get => base.Direction;
+            set => base.Direction = value;
+        }
 
         /// <summary>
-        /// Gets a list of user defined values to be tested additionally
-        /// to the pre-defined test values according to the <see cref="JsonInput.SqlTypeDefinition"/>.
+        /// <inheritdoc/>
         /// </summary>
-        /// <remarks>
-        /// Each value shall be of a .NET type compatible to the current <see cref="JsonInput.SqlTypeDefinition"/>.
-        /// The list will be cleared if the <see cref="JsonInput.SqlTypeDefinition"/> changed.
-        /// User values will be ignored, if the <see cref="Direction"/> is not <see cref="ParameterDirection.Input"/>.
-        /// </remarks>
-        [JsonIgnore]
-        public override List<object> UserValues { get; }
-
-        /// <summary>
-        /// Internal representaiton of <see cref="UserValues"/> to interact with the JSON-file.
-        /// The getter will return a list of <see cref="JsonElement"/> with JSON compatible value kinds.
-        /// The setter will convert each user value in a compatible .NET type and store the value into the <see cref="UserValues"/>-list.
-        /// </summary>
+        /// <remarks><inheritdoc/></remarks>
         [JsonPropertyName("UserValues")]
         [JsonPropertyOrder(-5)]
+        [JsonConverter(typeof(JsonSqlValueListConverter))]
         [JsonInclude]
-        private List<JsonElement> UserValuesJson
+        public override List<object> UserValues
         {
-            get
-            {
-                var jsonElements = new List<JsonElement>();
-                foreach (var value in UserValues)
-                {
-                    var json = JsonSerializer.SerializeToElement(value);
-                    // TODO: Verwendung dieser FUnktion nochmal überprüfen
-                    jsonElements.Add(json);
-                }
-                return jsonElements;
-            }
-
-            set
-            {
-                // Der setter wird nur während der Deserialisierung aufgerufen.
-                // Die JsonElement-Liste in die UserValues-Liste umwandeln und dabei prüfen, ob die Werte zum definierten SQL-Typ passen.
-                // Ungültige Werte werden ignoriert.
-                // Zudem sollen null-Werte, sowie true und false ignoriert werden, da diese bereits bei den eingebauten Testwerten enthalten sind.
-                foreach (var jsonElement in value)
-                {
-                    if (jsonElement.ValueKind == JsonValueKind.Null || jsonElement.ValueKind == JsonValueKind.False || jsonElement.ValueKind == JsonValueKind.True) continue;
-
-                    try
-                    {
-                        UserValues.Add(JsonDataConverter.JsonToSql(jsonElement, SqlTypeDef.SqlType));
-                    }
-                    catch
-                    {
-                        //TODO: Mögliche Fehlermeldungen im Ausgabedokument ausgeben
-                    }
-                }
-
-            }
+            get => base.UserValues;
+            protected set => base.UserValues = value;
         }
     }
 }
