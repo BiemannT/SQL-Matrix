@@ -234,8 +234,57 @@ namespace BiemannT.MUT.MsSql.Def.JSON.Test
             // Bei der Methode Load wird eine Exception erwartet mit der Nachricht, dass im Resultset ein ungültiger Wert verwendet wird, der nicht zur Column DataType passt.
             Exception result = Assert.ThrowsException<InvalidOperationException>(jsonTest.Load);
             Assert.IsInstanceOfType(result.InnerException, typeof(JsonException));
-            StringAssert.StartsWith(result.InnerException.Message, "Error converting value 'Fehler' to type of column 'ID'.");
+            StringAssert.StartsWith(result.InnerException.Message, "The JSON value 'Fehler' cannot be converted to the target type 'System.Int32'.");
             Assert.AreEqual(26, ((JsonException)result.InnerException).LineNumber);
+        }
+
+        /// <summary>
+        /// Test loading of a definition file with valid input parameter definitions.
+        /// </summary>
+        [TestMethod]
+        public void Test_LoadValid_InputsOnly()
+        {
+            Definition jsonTest = new JsonDefinition()
+            {
+                FileName = new("./Definitionen/Valid - inputs only.json")
+            };
+
+            jsonTest.Load();
+
+            // Bei der Methode Load sollen alle Werte korrekt gelesen werden.
+            TestContext.WriteLine($"Actual count of inputs: {jsonTest.Inputs.Count}");
+            Assert.AreEqual(3, jsonTest.Inputs.Count);
+
+            // Beispiel Input Parameter 1
+            TestContext.WriteLine($"Input 1: Name '{jsonTest.Inputs[0].ParameterName}' - Type: '{jsonTest.Inputs[0].SqlTypeDef}' - UserValues: '{jsonTest.Inputs[0].UserValues.Count}'");
+            Assert.AreEqual("Input1", jsonTest.Inputs[0].ParameterName);
+            Assert.AreEqual("INT", jsonTest.Inputs[0].SqlTypeDef.ToString());
+            Assert.AreEqual(System.Data.ParameterDirection.Input, jsonTest.Inputs[0].Direction);
+            Assert.AreEqual(true, jsonTest.Inputs[0].IsNullable);
+            Assert.AreEqual(false, jsonTest.Inputs[0].HasDefaultValue);
+            Assert.AreEqual(3, jsonTest.Inputs[0].UserValues.Count);
+            Assert.AreEqual((byte)10, jsonTest.Inputs[0].UserValues[0]);
+            Assert.AreEqual((byte)20, jsonTest.Inputs[0].UserValues[1]);
+            Assert.AreEqual((byte)30, jsonTest.Inputs[0].UserValues[2]);
+
+            // Beispiel Input Parameter 2
+            TestContext.WriteLine($"Input 2: Name '{jsonTest.Inputs[1].ParameterName}' - Type: '{jsonTest.Inputs[1].SqlTypeDef}' - UserValues: '{jsonTest.Inputs[1].UserValues.Count}'");
+            Assert.AreEqual("Input2", jsonTest.Inputs[1].ParameterName);
+            Assert.AreEqual("VARCHAR(50)", jsonTest.Inputs[1].SqlTypeDef.ToString());
+            Assert.AreEqual(System.Data.ParameterDirection.Output, jsonTest.Inputs[1].Direction);
+            Assert.AreEqual(0, jsonTest.Inputs[1].UserValues.Count);
+
+
+            // Beispiel Input Parameter 3
+            TestContext.WriteLine($"Input 3: Name '{jsonTest.Inputs[2].ParameterName}' - Type: '{jsonTest.Inputs[2].SqlTypeDef}' - UserValues: '{jsonTest.Inputs[2].UserValues.Count}'");
+            Assert.AreEqual("Input3", jsonTest.Inputs[2].ParameterName);
+            Assert.AreEqual("DATE", jsonTest.Inputs[2].SqlTypeDef.ToString());
+            Assert.AreEqual(false, jsonTest.Inputs[2].IsNullable);
+            Assert.AreEqual(false, jsonTest.Inputs[2].HasDefaultValue);
+            Assert.AreEqual(3, jsonTest.Inputs[2].UserValues.Count);
+            Assert.AreEqual(new DateTime(2023, 1, 1), jsonTest.Inputs[2].UserValues[0]);
+            Assert.AreEqual(new DateTime(2023, 6, 15), jsonTest.Inputs[2].UserValues[1]);
+            Assert.AreEqual(new DateTime(2023, 12, 31), jsonTest.Inputs[2].UserValues[2]);
         }
     }
 }

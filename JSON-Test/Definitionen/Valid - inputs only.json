@@ -1,0 +1,38 @@
+{
+  "SQL-Matrix-Api-Version": "v1",
+  "SchemaName": "dbo",
+  "TestObjectName": "TestProcedure",
+  "MaxExecutionTime": 2,
+  "Inputs": [
+    {
+      "ParameterName": "Input1",
+      "SqlType": "INT",
+      "Direction": "INPUT",
+      "Nullable": true,
+      "Default": false,
+      "UserValues": [
+        10,
+        20,
+        30
+      ]
+    },
+
+    {
+      "ParameterName": "Input2",
+      "SqlType": "VARCHAR(50)",
+      "Direction": "OUTPUT"
+    },
+
+    {
+      "ParameterName": "Input3",
+      "SqlType": "DATE",
+      "Nullable": false,
+      "Default": false,
+      "UserValues": [
+        "2023-01-01",
+        "2023-06-15",
+        "2023-12-31"
+      ]
+    }
+  ]
+}

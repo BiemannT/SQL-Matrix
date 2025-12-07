@@ -37,6 +37,9 @@
     <None Update="Definitionen\Invalid expected resultset - Invalid type.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Definitionen\Valid - inputs only.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Definitionen\Valid - no inputs - no required data - results.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
