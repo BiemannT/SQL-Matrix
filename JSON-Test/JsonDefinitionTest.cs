@@ -62,11 +62,11 @@ namespace BiemannT.MUT.MsSql.Def.JSON.Test
             };
 
             // Bei der Methode Load wird eine Exception erwartet mit der Nachricht, dass es sich nicht um eine gültige Version handelt.
-            Exception result = Assert.ThrowsException<NotSupportedException>(jsonTest.Load);
+            Exception result = Assert.ThrowsException<InvalidOperationException>(jsonTest.Load);
 
-            TestContext.WriteLine("Actual load exception message: {0}", result.Message);
+            TestContext.WriteLine("Actual load exception message: {0}", result.InnerException!.Message);
 
-            StringAssert.StartsWith(result.Message, "The API-Version 'v0' is not supported.");
+            StringAssert.StartsWith(result.InnerException.Message, "Unsupported API version: v0");
         }
 
         /// <summary>
