@@ -18,7 +18,7 @@ namespace BiemannT.MUT.MsSql.Def.JSON.Test
 
             // Bei der Methode Load wird eine Exception erwartet.
 
-            Exception result = Assert.ThrowsException<InvalidOperationException>(jsonTest.Load);
+            Exception result = Assert.ThrowsExactly<InvalidOperationException>(jsonTest.Load);
 
             TestContext.WriteLine("Actual load exception message: {0}", result.Message);
 
@@ -37,7 +37,7 @@ namespace BiemannT.MUT.MsSql.Def.JSON.Test
             };
 
             // Bei der Methode Load wird eine Exception erwartet, mit einer innerException.
-            Exception result = Assert.ThrowsException<InvalidOperationException>(jsonTest.Load);
+            Exception result = Assert.ThrowsExactly<InvalidOperationException>(jsonTest.Load);
 
             TestContext.WriteLine("Actual load exception message: {0}", result.Message);
 
@@ -62,7 +62,7 @@ namespace BiemannT.MUT.MsSql.Def.JSON.Test
             };
 
             // Bei der Methode Load wird eine Exception erwartet mit der Nachricht, dass es sich nicht um eine gültige Version handelt.
-            Exception result = Assert.ThrowsException<InvalidOperationException>(jsonTest.Load);
+            Exception result = Assert.ThrowsExactly<InvalidOperationException>(jsonTest.Load);
 
             TestContext.WriteLine("Actual load exception message: {0}", result.InnerException!.Message);
 
@@ -82,7 +82,7 @@ namespace BiemannT.MUT.MsSql.Def.JSON.Test
             };
 
             // Bei der Methode Load wird eine Exception erwartet mit der Nachricht, dass nur positive Zahlen erlaubt sind.
-            Exception result = Assert.ThrowsException<ArgumentOutOfRangeException>(jsonTest.Load);
+            Exception result = Assert.ThrowsExactly<ArgumentOutOfRangeException>(jsonTest.Load);
 
             TestContext.WriteLine("Actual load exception message: {0}", result.Message);
 
@@ -115,7 +115,7 @@ namespace BiemannT.MUT.MsSql.Def.JSON.Test
             Assert.AreEqual(2, jsonTest.MaxExecutionTime);
 
             TestContext.WriteLine("Actual number of inputs: {0}", jsonTest.Inputs.Count);
-            Assert.AreEqual(0, jsonTest.Inputs.Count);
+            Assert.IsEmpty(jsonTest.Inputs);
         }
 
         /// <summary>
@@ -140,7 +140,7 @@ namespace BiemannT.MUT.MsSql.Def.JSON.Test
             // Bei der Methode Load sollen alle Werte korrekt gelesen werden.
             // Es wird davon ausgegangen, dass die Basis Definitions-Eigenschaften richtig geladen werden.
             TestContext.WriteLine("Actual count of expected results: {0}", jsonTest.ExpectedResults.Count);
-            Assert.AreEqual(4, jsonTest.ExpectedResults.Count);
+            Assert.HasCount(4, jsonTest.ExpectedResults);
 
             // Beispiel Exception Result
             TestContext.WriteLine("1st result: Type '{0}' - Error Number: '{1}' - Timestamp: '{2}' - Duration: '{3}'", jsonTest.ExpectedResults[0].ResultType.ToString(), jsonTest.ExpectedResults[0].ErrorNumber.ToString(), jsonTest.ExpectedResults[0].LastExecution.ToString(), jsonTest.ExpectedResults[0].LastDuration.ToString());
@@ -167,13 +167,13 @@ namespace BiemannT.MUT.MsSql.Def.JSON.Test
             // Beispiel einzelnes Resultset
             TestContext.WriteLine("4th result: Type '{0}' - Resultsets count: '{1}'", jsonTest.ExpectedResults[3].ResultType.ToString(), jsonTest.ExpectedResults[3].ResultSets.Tables.Count);
             Assert.AreEqual(ExpectedResultTypes.Resultset, jsonTest.ExpectedResults[3].ResultType);
-            Assert.IsTrue(jsonTest.ExpectedResults[3].LastExecution is null);
-            Assert.IsTrue(jsonTest.ExpectedResults[3].LastDuration is null);
-            Assert.AreEqual(2, jsonTest.ExpectedResults[3].ResultSets.Tables.Count);
+            Assert.IsNull(jsonTest.ExpectedResults[3].LastExecution);
+            Assert.IsNull(jsonTest.ExpectedResults[3].LastDuration);
+            Assert.HasCount(2, jsonTest.ExpectedResults[3].ResultSets.Tables);
 
             // Erste Tabelle des Resultsets prüfen
             // Überschriften prüfen
-            Assert.AreEqual(3, jsonTest.ExpectedResults[3].ResultSets.Tables[0].Columns.Count);
+            Assert.HasCount(3, jsonTest.ExpectedResults[3].ResultSets.Tables[0].Columns);
             Assert.AreEqual("ID", jsonTest.ExpectedResults[3].ResultSets.Tables[0].Columns[0].ColumnName);
             Assert.AreEqual(typeof(int) ,jsonTest.ExpectedResults[3].ResultSets.Tables[0].Columns[0].DataType);
             Assert.AreEqual("Name", jsonTest.ExpectedResults[3].ResultSets.Tables[0].Columns[1].ColumnName);
@@ -182,7 +182,7 @@ namespace BiemannT.MUT.MsSql.Def.JSON.Test
             Assert.AreEqual(typeof(DateTime), jsonTest.ExpectedResults[3].ResultSets.Tables[0].Columns[2].DataType);
 
             // Zeilen prüfen
-            Assert.AreEqual(3, jsonTest.ExpectedResults[3].ResultSets.Tables[0].Rows.Count);
+            Assert.HasCount(3, jsonTest.ExpectedResults[3].ResultSets.Tables[0].Rows);
 
             // Erste Zeile prüfen
             Assert.AreEqual(1, jsonTest.ExpectedResults[3].ResultSets.Tables[0].Rows[0]["ID"]);
@@ -213,7 +213,7 @@ namespace BiemannT.MUT.MsSql.Def.JSON.Test
             };
 
             // Bei der Methode Load wird eine Exception erwartet mit der Nachricht, dass im Resultset ein ungültiger Datentyp verwendet wird.
-            Exception result = Assert.ThrowsException<InvalidOperationException>(jsonTest.Load);
+            Exception result = Assert.ThrowsExactly<InvalidOperationException>(jsonTest.Load);
             Assert.IsInstanceOfType(result.InnerException, typeof(JsonException));
             StringAssert.StartsWith(result.InnerException.Message, "Expected String token for Column DataType of ExpectedResultSet.");
             Assert.AreEqual(21, ((JsonException)result.InnerException).LineNumber);
@@ -232,7 +232,7 @@ namespace BiemannT.MUT.MsSql.Def.JSON.Test
             };
 
             // Bei der Methode Load wird eine Exception erwartet mit der Nachricht, dass im Resultset ein ungültiger Wert verwendet wird, der nicht zur Column DataType passt.
-            Exception result = Assert.ThrowsException<InvalidOperationException>(jsonTest.Load);
+            Exception result = Assert.ThrowsExactly<InvalidOperationException>(jsonTest.Load);
             Assert.IsInstanceOfType(result.InnerException, typeof(JsonException));
             StringAssert.StartsWith(result.InnerException.Message, "The JSON value 'Fehler' cannot be converted to the target type 'System.Int32'.");
             Assert.AreEqual(26, ((JsonException)result.InnerException).LineNumber);
@@ -253,16 +253,16 @@ namespace BiemannT.MUT.MsSql.Def.JSON.Test
 
             // Bei der Methode Load sollen alle Werte korrekt gelesen werden.
             TestContext.WriteLine($"Actual count of inputs: {jsonTest.Inputs.Count}");
-            Assert.AreEqual(3, jsonTest.Inputs.Count);
+            Assert.HasCount(3, jsonTest.Inputs);
 
             // Beispiel Input Parameter 1
             TestContext.WriteLine($"Input 1: Name '{jsonTest.Inputs[0].ParameterName}' - Type: '{jsonTest.Inputs[0].SqlTypeDef}' - UserValues: '{jsonTest.Inputs[0].UserValues.Count}'");
             Assert.AreEqual("Input1", jsonTest.Inputs[0].ParameterName);
             Assert.AreEqual("INT", jsonTest.Inputs[0].SqlTypeDef.ToString());
             Assert.AreEqual(System.Data.ParameterDirection.Input, jsonTest.Inputs[0].Direction);
-            Assert.AreEqual(true, jsonTest.Inputs[0].IsNullable);
-            Assert.AreEqual(false, jsonTest.Inputs[0].HasDefaultValue);
-            Assert.AreEqual(3, jsonTest.Inputs[0].UserValues.Count);
+            Assert.IsTrue(jsonTest.Inputs[0].IsNullable);
+            Assert.IsFalse(jsonTest.Inputs[0].HasDefaultValue);
+            Assert.HasCount(3, jsonTest.Inputs[0].UserValues);
             Assert.AreEqual((byte)10, jsonTest.Inputs[0].UserValues[0]);
             Assert.AreEqual((byte)20, jsonTest.Inputs[0].UserValues[1]);
             Assert.AreEqual((byte)30, jsonTest.Inputs[0].UserValues[2]);
@@ -272,16 +272,16 @@ namespace BiemannT.MUT.MsSql.Def.JSON.Test
             Assert.AreEqual("Input2", jsonTest.Inputs[1].ParameterName);
             Assert.AreEqual("VARCHAR(50)", jsonTest.Inputs[1].SqlTypeDef.ToString());
             Assert.AreEqual(System.Data.ParameterDirection.Output, jsonTest.Inputs[1].Direction);
-            Assert.AreEqual(0, jsonTest.Inputs[1].UserValues.Count);
+            Assert.IsEmpty(jsonTest.Inputs[1].UserValues);
 
 
             // Beispiel Input Parameter 3
             TestContext.WriteLine($"Input 3: Name '{jsonTest.Inputs[2].ParameterName}' - Type: '{jsonTest.Inputs[2].SqlTypeDef}' - UserValues: '{jsonTest.Inputs[2].UserValues.Count}'");
             Assert.AreEqual("Input3", jsonTest.Inputs[2].ParameterName);
             Assert.AreEqual("DATE", jsonTest.Inputs[2].SqlTypeDef.ToString());
-            Assert.AreEqual(false, jsonTest.Inputs[2].IsNullable);
-            Assert.AreEqual(false, jsonTest.Inputs[2].HasDefaultValue);
-            Assert.AreEqual(3, jsonTest.Inputs[2].UserValues.Count);
+            Assert.IsFalse(jsonTest.Inputs[2].IsNullable);
+            Assert.IsFalse(jsonTest.Inputs[2].HasDefaultValue);
+            Assert.HasCount(3, jsonTest.Inputs[2].UserValues);
             Assert.AreEqual(new DateTime(2023, 1, 1), jsonTest.Inputs[2].UserValues[0]);
             Assert.AreEqual(new DateTime(2023, 6, 15), jsonTest.Inputs[2].UserValues[1]);
             Assert.AreEqual(new DateTime(2023, 12, 31), jsonTest.Inputs[2].UserValues[2]);
