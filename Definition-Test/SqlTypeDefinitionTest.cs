@@ -83,5 +83,65 @@ namespace BiemannT.MUT.MsSql.Def.Common.Test
             Assert.AreEqual(errorSeverity, results[0].Severity);
 
         }
+
+        /// <summary>
+        /// Verifies that the ToString method of the SqlTypeDefinition class returns the expected SQL type string
+        /// representations for various type definitions.
+        /// </summary>
+        /// <remarks>This test covers a range of supported SQL types and their variations, including size,
+        /// precision, and scale where applicable. It ensures that the string output matches the expected SQL syntax for
+        /// each type definition.</remarks>
+        [TestMethod]
+        public void Test_ToString()
+        {
+            // Typdefinitionen erstellen
+            Dictionary<SqlTypeDefinition, string> definitions = [];
+
+            definitions.Add(new SqlTypeDefinition { SqlType = SupportedSqlType.NotSupported }, string.Empty);
+            definitions.Add(new SqlTypeDefinition { SqlType = SupportedSqlType.Binary }, "BINARY");
+            definitions.Add(new SqlTypeDefinition { SqlType = SupportedSqlType.Binary, Size = 2000 }, "BINARY(2000)");
+            definitions.Add(new SqlTypeDefinition { SqlType = SupportedSqlType.VarBinary, Size = 2000 }, "VARBINARY(2000)");
+            definitions.Add(new SqlTypeDefinition { SqlType = SupportedSqlType.VarBinary, Size = -1 }, "VARBINARY(MAX)");
+            definitions.Add(new SqlTypeDefinition { SqlType = SupportedSqlType.Char }, "CHAR");
+            definitions.Add(new SqlTypeDefinition { SqlType = SupportedSqlType.Char, Size = 2000 }, "CHAR(2000)");
+            definitions.Add(new SqlTypeDefinition { SqlType = SupportedSqlType.VarChar }, "VARCHAR");
+            definitions.Add(new SqlTypeDefinition { SqlType = SupportedSqlType.VarChar, Size = 2000 }, "VARCHAR(2000)");
+            definitions.Add(new SqlTypeDefinition { SqlType = SupportedSqlType.VarChar, Size = -1 }, "VARCHAR(MAX)");
+            definitions.Add(new SqlTypeDefinition { SqlType = SupportedSqlType.NChar }, "NCHAR");
+            definitions.Add(new SqlTypeDefinition { SqlType = SupportedSqlType.NChar, Size = 2000 }, "NCHAR(2000)");
+            definitions.Add(new SqlTypeDefinition { SqlType = SupportedSqlType.NVarChar }, "NVARCHAR");
+            definitions.Add(new SqlTypeDefinition { SqlType = SupportedSqlType.NVarChar, Size = 2000 }, "NVARCHAR(2000)");
+            definitions.Add(new SqlTypeDefinition { SqlType = SupportedSqlType.NVarChar, Size = -1 }, "NVARCHAR(MAX)");
+            definitions.Add(new SqlTypeDefinition { SqlType = SupportedSqlType.UniqueIdentifier }, "UNIQUEIDENTIFIER");
+            definitions.Add(new SqlTypeDefinition { SqlType = SupportedSqlType.Bit }, "BIT");
+            definitions.Add(new SqlTypeDefinition { SqlType = SupportedSqlType.TinyInt }, "TINYINT");
+            definitions.Add(new SqlTypeDefinition { SqlType = SupportedSqlType.SmallInt }, "SMALLINT");
+            definitions.Add(new SqlTypeDefinition { SqlType = SupportedSqlType.Int }, "INT");
+            definitions.Add(new SqlTypeDefinition { SqlType = SupportedSqlType.BigInt }, "BIGINT");
+            definitions.Add(new SqlTypeDefinition { SqlType = SupportedSqlType.SmallMoney }, "SMALLMONEY");
+            definitions.Add(new SqlTypeDefinition { SqlType = SupportedSqlType.Money }, "MONEY");
+            definitions.Add(new SqlTypeDefinition { SqlType = SupportedSqlType.Decimal }, "DECIMAL");
+            definitions.Add(new SqlTypeDefinition { SqlType = SupportedSqlType.Decimal, Precision = 10 }, "DECIMAL(10)");
+            definitions.Add(new SqlTypeDefinition { SqlType = SupportedSqlType.Decimal, Precision = 10, Scale = 3 }, "DECIMAL(10, 3)");
+            definitions.Add(new SqlTypeDefinition { SqlType = SupportedSqlType.Real }, "REAL");
+            definitions.Add(new SqlTypeDefinition { SqlType = SupportedSqlType.Float }, "FLOAT");
+            definitions.Add(new SqlTypeDefinition { SqlType = SupportedSqlType.Float, Size = 10 }, "FLOAT(10)");
+            definitions.Add(new SqlTypeDefinition { SqlType = SupportedSqlType.Time }, "TIME");
+            definitions.Add(new SqlTypeDefinition { SqlType = SupportedSqlType.Time, Scale = 2 }, "TIME(2)");
+            definitions.Add(new SqlTypeDefinition { SqlType = SupportedSqlType.Date }, "DATE");
+            definitions.Add(new SqlTypeDefinition { SqlType = SupportedSqlType.SmallDateTime }, "SMALLDATETIME");
+            definitions.Add(new SqlTypeDefinition { SqlType = SupportedSqlType.DateTime }, "DATETIME");
+            definitions.Add(new SqlTypeDefinition { SqlType = SupportedSqlType.DateTime2 }, "DATETIME2");
+            definitions.Add(new SqlTypeDefinition { SqlType = SupportedSqlType.DateTime2, Scale = 2 }, "DATETIME2(2)");
+            definitions.Add(new SqlTypeDefinition { SqlType = SupportedSqlType.DateTimeOffset }, "DATETIMEOFFSET");
+            definitions.Add(new SqlTypeDefinition { SqlType = SupportedSqlType.DateTimeOffset, Scale = 2 }, "DATETIMEOFFSET(2)");
+
+            // Text Rückgabe testen
+            foreach (var def in definitions)
+            {
+                Assert.AreEqual(def.Value, def.Key.ToString());
+            }
+
+        }
     }
 }
