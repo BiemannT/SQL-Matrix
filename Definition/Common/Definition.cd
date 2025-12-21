@@ -34,12 +34,13 @@
   <Class Name="BiemannT.MUT.MsSql.Def.Common.SqlTypeDefinition">
     <Position X="10.5" Y="3.25" Width="2.75" />
     <TypeIdentifier>
-      <HashCode>AAAQAAAAAAAAgAAEAAIAAAAAAAAAAAAAAAAAAAAAEAE=</HashCode>
+      <HashCode>AAAQAAAAAACAgAAEAAIAAAAAAAAAAAAAAAAAAAAAEAE=</HashCode>
       <FileName>Common\SqlTypeDefinition.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
       <Property Name="SqlType" />
     </ShowAsAssociation>
+    <Lollipop Position="0.2" />
   </Class>
   <Class Name="BiemannT.MUT.MsSql.Def.Common.ValidationResult">
     <Position X="5.5" Y="0.5" Width="2.5" />

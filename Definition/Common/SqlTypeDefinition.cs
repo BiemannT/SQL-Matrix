@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Collections.ObjectModel;
+using System.Text.RegularExpressions;
 
 namespace BiemannT.MUT.MsSql.Def.Common
 {
@@ -6,7 +7,7 @@ namespace BiemannT.MUT.MsSql.Def.Common
     /// Represents the definition of a SQL data type, including its type, size, precision, and scale as parsed from a
     /// SQL type declaration string.
     /// </summary>
-    public class SqlTypeDefinition
+    public class SqlTypeDefinition : IDefValidation
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="SqlTypeDefinition"/>-class with default values indicating an unsupported SQL type.
@@ -24,7 +25,7 @@ namespace BiemannT.MUT.MsSql.Def.Common
         /// </summary>
         /// <param name="sqlTypeDefinition">A string containing the SQL type definition to be parsed.
         /// An empty string - OR - a not supported type will return an instance with <see cref="SupportedSqlType.NotSupported"/>.</param>
-        public SqlTypeDefinition(string sqlTypeDefinition): this()
+        public SqlTypeDefinition(string sqlTypeDefinition) : this()
         {
             // Datentyp analysieren
             try
@@ -327,6 +328,113 @@ namespace BiemannT.MUT.MsSql.Def.Common
                     throw new InvalidOperationException($"SQL type '{sqlTypeDefinition}' is not supported.");
             }
 
+        }
+
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        /// <returns><inheritdoc/></returns>
+        public ReadOnlyCollection<ValidationResult> Validate()
+        {
+            // Korrekte Parameter prüfen
+            var results = new List<ValidationResult>();
+
+            #region Parameter Size prüfen
+            // Parameter Size bei folgenden Typen von Bedeutung:
+            // BINARY, VARBINARY, CHAR, VARCHAR, NCHAR, NVARCHAR
+            // Bei den VAR*-Typen ist auch MAX (-1) erlaubt
+            if (SqlType == SupportedSqlType.Binary ||
+                SqlType == SupportedSqlType.Char)
+            {
+                if (Size < 1 || Size > 8000)
+                {
+                    results.Add(new ValidationResult(
+                        ValidationResultSeverity.Error,
+                        nameof(Size),
+                        $"Size for type '{SqlType}' must be between 1 and 8000."));
+                }
+            }
+            else if (SqlType == SupportedSqlType.VarBinary ||
+                     SqlType == SupportedSqlType.VarChar)
+            {
+                if (Size != -1 && (Size < 1 || Size > 8000))
+                {
+                    results.Add(new ValidationResult(
+                        ValidationResultSeverity.Error,
+                        nameof(Size),
+                        $"Size for type '{SqlType}' must be between 1 and 8000 or MAX (-1)."));
+                }
+            }
+            else if (SqlType == SupportedSqlType.NChar)
+            {
+                if (Size < 1 || Size > 4000)
+                {
+                    results.Add(new ValidationResult(
+                        ValidationResultSeverity.Error,
+                        nameof(Size),
+                        $"Size for type '{SqlType}' must be between 1 and 4000."));
+                }
+            }
+            else if (SqlType == SupportedSqlType.NVarChar)
+            {
+                if (Size != -1 && (Size < 1 || Size > 4000))
+                {
+                    results.Add(new ValidationResult(
+                        ValidationResultSeverity.Error,
+                        nameof(Size),
+                        $"Size for type '{SqlType}' must be between 1 and 4000 or MAX (-1)."));
+                }
+            }
+
+            #endregion
+
+            #region Parameter Precision prüfen
+            // Parameter Precision nur bei Decimal von Bedeutung
+
+            if (SqlType == SupportedSqlType.Decimal)
+            {
+                if (Precision < 1 || Precision > 38)
+                {
+                    results.Add(new ValidationResult(
+                        ValidationResultSeverity.Error,
+                        nameof(Precision),
+                        $"Precision for type '{SqlType}' must be between 1 and 38."));
+                }
+            }
+
+            #endregion
+
+            #region Parameter Scale prüfen
+            // Parameter Scale nur bei Decimal, Time, DateTime2, DateTimeOffset von Bedeutung
+
+            if (SqlType == SupportedSqlType.Decimal)
+            {
+                if (Scale < 0 || Scale > Precision)
+                {
+                    results.Add(new ValidationResult(
+                        ValidationResultSeverity.Error,
+                        nameof(Scale),
+                        $"Scale for type '{SqlType}' must be between 0 and Precision ({Precision})."));
+                }
+            }
+            else if (SqlType == SupportedSqlType.Time ||
+                     SqlType == SupportedSqlType.DateTime2 ||
+                     SqlType == SupportedSqlType.DateTimeOffset)
+            {
+                if (Scale < 0 || Scale > 7)
+                {
+                    results.Add(new ValidationResult(
+                        ValidationResultSeverity.Error,
+                        nameof(Scale),
+                        $"Scale for type '{SqlType}' must be between 0 and 7."));
+                }
+            }
+
+            #endregion
+
+            // Wenn alle Parameter korrekt sind, wird eine leere Liste zurückgegeben
+            // Ansonsten die Liste mit den gefundenen Fehlern
+            return results.AsReadOnly();
         }
     }
 }
