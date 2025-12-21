@@ -66,7 +66,7 @@ namespace BiemannT.MUT.MsSql.Def.JSON.Test
 
             TestContext.WriteLine("Actual load exception message: {0}", result.InnerException!.Message);
 
-            StringAssert.StartsWith(result.InnerException.Message, "Unsupported API version: v0");
+            Assert.StartsWith("Unsupported API version: v0", result.InnerException.Message);
         }
 
         /// <summary>
@@ -86,7 +86,7 @@ namespace BiemannT.MUT.MsSql.Def.JSON.Test
 
             TestContext.WriteLine("Actual load exception message: {0}", result.Message);
 
-            StringAssert.StartsWith(result.Message, "MaxExecutionTime must be a positive integer.");
+            Assert.StartsWith("MaxExecutionTime must be a positive integer.", result.Message);
             Assert.AreEqual(-10, ((ArgumentOutOfRangeException)result).ActualValue);
         }
 
@@ -215,7 +215,7 @@ namespace BiemannT.MUT.MsSql.Def.JSON.Test
             // Bei der Methode Load wird eine Exception erwartet mit der Nachricht, dass im Resultset ein ungültiger Datentyp verwendet wird.
             Exception result = Assert.ThrowsExactly<InvalidOperationException>(jsonTest.Load);
             Assert.IsInstanceOfType(result.InnerException, typeof(JsonException));
-            StringAssert.StartsWith(result.InnerException.Message, "Expected String token for Column DataType of ExpectedResultSet.");
+            Assert.StartsWith("Expected String token for Column DataType of ExpectedResultSet.", result.InnerException.Message);
             Assert.AreEqual(21, ((JsonException)result.InnerException).LineNumber);
         }
 
@@ -234,7 +234,7 @@ namespace BiemannT.MUT.MsSql.Def.JSON.Test
             // Bei der Methode Load wird eine Exception erwartet mit der Nachricht, dass im Resultset ein ungültiger Wert verwendet wird, der nicht zur Column DataType passt.
             Exception result = Assert.ThrowsExactly<InvalidOperationException>(jsonTest.Load);
             Assert.IsInstanceOfType(result.InnerException, typeof(JsonException));
-            StringAssert.StartsWith(result.InnerException.Message, "The JSON value 'Fehler' cannot be converted to the target type 'System.Int32'.");
+            Assert.StartsWith("The JSON value 'Fehler' cannot be converted to the target type 'System.Int32'.", result.InnerException.Message);
             Assert.AreEqual(26, ((JsonException)result.InnerException).LineNumber);
         }
 
