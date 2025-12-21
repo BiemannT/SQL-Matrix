@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 18
-VisualStudioVersion = 18.1.11312.151 d18.0
+VisualStudioVersion = 18.1.11312.151
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SQL-Matrix-Unit-CLI", "SQL-Matrix-Unit-CLI\SQL-Matrix-Unit-CLI.csproj", "{351C699B-9B84-A840-751B-89F0F3154024}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -15,6 +15,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JSON", "JSON\JSON.csproj", "{26E2DD55-102D-442A-BE11-4533FA3EB90D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JSON-Test", "JSON-Test\JSON-Test.csproj", "{9462BE75-6FE6-4853-B9B9-EBCF37C47B8F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Definition-Test", "Definition-Test\Definition-Test.csproj", "{77E41479-0282-4C85-AAB0-17837CE0F59B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -42,6 +44,10 @@ Global
 		{9462BE75-6FE6-4853-B9B9-EBCF37C47B8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9462BE75-6FE6-4853-B9B9-EBCF37C47B8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9462BE75-6FE6-4853-B9B9-EBCF37C47B8F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{77E41479-0282-4C85-AAB0-17837CE0F59B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{77E41479-0282-4C85-AAB0-17837CE0F59B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{77E41479-0282-4C85-AAB0-17837CE0F59B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{77E41479-0282-4C85-AAB0-17837CE0F59B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
