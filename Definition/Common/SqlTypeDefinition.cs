@@ -113,18 +113,27 @@ namespace BiemannT.MUT.MsSql.Def.Common
             }
 
             // Folgende Typen unterstützen Size:
-            // BINARY, VARBINARY, CHAR, VARCHAR, NCHAR, NVARCHAR, FLOAT
+            // BINARY, VARBINARY, CHAR, VARCHAR, NCHAR, NVARCHAR
             else if (Size > 0 && (
                     SqlType == SupportedSqlType.Binary ||
                     SqlType == SupportedSqlType.VarBinary ||
                     SqlType == SupportedSqlType.Char ||
                     SqlType == SupportedSqlType.VarChar ||
                     SqlType == SupportedSqlType.NChar ||
-                    SqlType == SupportedSqlType.NVarChar ||
-                    SqlType == SupportedSqlType.Float))
+                    SqlType == SupportedSqlType.NVarChar))
             {
                 output = string.Concat(output, "(", Size.ToString(), ")");
                 return output;
+            }
+
+            // Beim Float-Typ kann optional noch die Precision angegeben werden
+            if (SqlType == SupportedSqlType.Float)
+            {
+                if (Precision > 0)
+                {
+                    output = string.Concat(output, "(", Precision.ToString(), ")");
+                    return output;
+                }
             }
 
             // Beim Decimal-Typ können optional noch Precision und Scale angegeben werden
@@ -198,7 +207,7 @@ namespace BiemannT.MUT.MsSql.Def.Common
             {
                 if (analyze.Groups[3].Success)
                 {
-                    if (analyze.Groups[3].Value.ToUpper() == "MAX")
+                    if (analyze.Groups[3].Value.Equals("MAX", StringComparison.InvariantCultureIgnoreCase))
                     {
                         analyzeMAX = true;
                     }
@@ -295,6 +304,7 @@ namespace BiemannT.MUT.MsSql.Def.Common
 
                 case "FLOAT":
                     SqlType = SupportedSqlType.Float;
+                    Precision = analyzePrecision;
                     break;
 
                 case "TIME":
