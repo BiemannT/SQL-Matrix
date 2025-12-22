@@ -92,56 +92,99 @@ namespace BiemannT.MUT.MsSql.Def.Common.Test
         /// precision, and scale where applicable. It ensures that the string output matches the expected SQL syntax for
         /// each type definition.</remarks>
         [TestMethod]
-        public void Test_ToString()
+
+        // Testdaten für NotSupported
+        [DataRow(SupportedSqlType.NotSupported, (byte)0, (byte)0, 0, "")]
+
+        // Testdaten für Binary
+        [DataRow(SupportedSqlType.Binary, (byte)0, (byte)0, 0, "BINARY")]
+        [DataRow(SupportedSqlType.Binary, (byte)0, (byte)0, 2000, "BINARY(2000)")]
+
+        // Testdaten für Varbinary
+        [DataRow(SupportedSqlType.VarBinary, (byte)0, (byte)0, 0, "VARBINARY")]
+        [DataRow(SupportedSqlType.VarBinary, (byte)0, (byte)0, 2000, "VARBINARY(2000)")]
+        [DataRow(SupportedSqlType.VarBinary, (byte)0, (byte)0, -1, "VARBINARY(MAX)")]
+
+        // Testdaten für Char
+        [DataRow(SupportedSqlType.Char, (byte)0, (byte)0, 0, "CHAR")]
+        [DataRow(SupportedSqlType.Char, (byte)0, (byte)0, 2000, "CHAR(2000)")]
+
+        // Testdaten für Varchar
+        [DataRow(SupportedSqlType.VarChar, (byte)0, (byte)0, 0, "VARCHAR")]
+        [DataRow(SupportedSqlType.VarChar, (byte)0, (byte)0, 2000, "VARCHAR(2000)")]
+        [DataRow(SupportedSqlType.VarChar, (byte)0, (byte)0, -1, "VARCHAR(MAX)")]
+
+        // Testdaten für Nchar
+        [DataRow(SupportedSqlType.NChar, (byte)0, (byte)0, 0, "NCHAR")]
+        [DataRow(SupportedSqlType.NChar, (byte)0, (byte)0, 2000, "NCHAR(2000)")]
+
+        // Testdaten für Nvarchar
+        [DataRow(SupportedSqlType.NVarChar, (byte)0, (byte)0, 0, "NVARCHAR")]
+        [DataRow(SupportedSqlType.NVarChar, (byte)0, (byte)0, 2000, "NVARCHAR(2000)")]
+        [DataRow(SupportedSqlType.NVarChar, (byte)0, (byte)0, -1, "NVARCHAR(MAX)")]
+
+        // Testdaten für Uniqueidentifier
+        [DataRow(SupportedSqlType.UniqueIdentifier, (byte)0, (byte)0, 0, "UNIQUEIDENTIFIER")]
+
+        // Testdaten für Bit
+        [DataRow(SupportedSqlType.Bit, (byte)0, (byte)0, 0, "BIT")]
+
+        // Testdaten für Tinyint
+        [DataRow(SupportedSqlType.TinyInt, (byte)0, (byte)0, 0, "TINYINT")]
+
+        // Testdaten für Smallint
+        [DataRow(SupportedSqlType.SmallInt, (byte)0, (byte)0, 0, "SMALLINT")]
+
+        // Testdaten für Int
+        [DataRow(SupportedSqlType.Int, (byte)0, (byte)0, 0, "INT")]
+
+        // Testdaten für Bigint
+        [DataRow(SupportedSqlType.BigInt, (byte)0, (byte)0, 0, "BIGINT")]
+
+        // Testdaten für Smallmoney
+        [DataRow(SupportedSqlType.SmallMoney, (byte)0, (byte)0, 0, "SMALLMONEY")]
+
+        // Testdaten für Money
+        [DataRow(SupportedSqlType.Money, (byte)0, (byte)0, 0, "MONEY")]
+
+        // Testdaten für Decimal
+        [DataRow(SupportedSqlType.Decimal, (byte)0, (byte)0, 0, "DECIMAL")]
+        [DataRow(SupportedSqlType.Decimal, (byte)10, (byte)0, 0, "DECIMAL(10)")]
+        [DataRow(SupportedSqlType.Decimal, (byte)10, (byte)3, 0, "DECIMAL(10, 3)")]
+
+        // Testdaten für Real
+        [DataRow(SupportedSqlType.Real, (byte)0, (byte)0, 0, "REAL")]
+
+        // Testdaten für Float
+        [DataRow(SupportedSqlType.Float, (byte)0, (byte)0, 0, "FLOAT")]
+        [DataRow(SupportedSqlType.Float, (byte)10, (byte)0, 0, "FLOAT(10)")]
+
+        // Testdaten für Time
+        [DataRow(SupportedSqlType.Time, (byte)0, (byte)0, 0, "TIME")]
+        [DataRow(SupportedSqlType.Time, (byte)0, (byte)3, 0, "TIME(3)")]
+
+        // Testdaten für Date
+        [DataRow(SupportedSqlType.Date, (byte)0, (byte)0, 0, "DATE")]
+
+        // Testdaten für Smalldatetime
+        [DataRow(SupportedSqlType.SmallDateTime, (byte)0, (byte)0, 0, "SMALLDATETIME")]
+
+        // Testdaten für Datetime
+        [DataRow(SupportedSqlType.DateTime, (byte)0, (byte)0, 0, "DATETIME")]
+
+        // Testdaten für Datetime2
+        [DataRow(SupportedSqlType.DateTime2, (byte)0, (byte)0, 0, "DATETIME2")]
+        [DataRow(SupportedSqlType.DateTime2, (byte)0, (byte)5, 0, "DATETIME2(5)")]
+
+        // Testdaten für DateTimeOffset
+        [DataRow(SupportedSqlType.DateTimeOffset, (byte)0, (byte)0, 0, "DATETIMEOFFSET")]
+        [DataRow(SupportedSqlType.DateTimeOffset, (byte)0, (byte)3, 0, "DATETIMEOFFSET(3)")]
+        public void Test_ToString(SupportedSqlType testType, byte testPrecision, byte testScale, int testSize, string expectedResult)
         {
-            // Typdefinitionen erstellen
-            Dictionary<SqlTypeDefinition, string> definitions = [];
-
-            definitions.Add(new SqlTypeDefinition { SqlType = SupportedSqlType.NotSupported }, string.Empty);
-            definitions.Add(new SqlTypeDefinition { SqlType = SupportedSqlType.Binary }, "BINARY");
-            definitions.Add(new SqlTypeDefinition { SqlType = SupportedSqlType.Binary, Size = 2000 }, "BINARY(2000)");
-            definitions.Add(new SqlTypeDefinition { SqlType = SupportedSqlType.VarBinary, Size = 2000 }, "VARBINARY(2000)");
-            definitions.Add(new SqlTypeDefinition { SqlType = SupportedSqlType.VarBinary, Size = -1 }, "VARBINARY(MAX)");
-            definitions.Add(new SqlTypeDefinition { SqlType = SupportedSqlType.Char }, "CHAR");
-            definitions.Add(new SqlTypeDefinition { SqlType = SupportedSqlType.Char, Size = 2000 }, "CHAR(2000)");
-            definitions.Add(new SqlTypeDefinition { SqlType = SupportedSqlType.VarChar }, "VARCHAR");
-            definitions.Add(new SqlTypeDefinition { SqlType = SupportedSqlType.VarChar, Size = 2000 }, "VARCHAR(2000)");
-            definitions.Add(new SqlTypeDefinition { SqlType = SupportedSqlType.VarChar, Size = -1 }, "VARCHAR(MAX)");
-            definitions.Add(new SqlTypeDefinition { SqlType = SupportedSqlType.NChar }, "NCHAR");
-            definitions.Add(new SqlTypeDefinition { SqlType = SupportedSqlType.NChar, Size = 2000 }, "NCHAR(2000)");
-            definitions.Add(new SqlTypeDefinition { SqlType = SupportedSqlType.NVarChar }, "NVARCHAR");
-            definitions.Add(new SqlTypeDefinition { SqlType = SupportedSqlType.NVarChar, Size = 2000 }, "NVARCHAR(2000)");
-            definitions.Add(new SqlTypeDefinition { SqlType = SupportedSqlType.NVarChar, Size = -1 }, "NVARCHAR(MAX)");
-            definitions.Add(new SqlTypeDefinition { SqlType = SupportedSqlType.UniqueIdentifier }, "UNIQUEIDENTIFIER");
-            definitions.Add(new SqlTypeDefinition { SqlType = SupportedSqlType.Bit }, "BIT");
-            definitions.Add(new SqlTypeDefinition { SqlType = SupportedSqlType.TinyInt }, "TINYINT");
-            definitions.Add(new SqlTypeDefinition { SqlType = SupportedSqlType.SmallInt }, "SMALLINT");
-            definitions.Add(new SqlTypeDefinition { SqlType = SupportedSqlType.Int }, "INT");
-            definitions.Add(new SqlTypeDefinition { SqlType = SupportedSqlType.BigInt }, "BIGINT");
-            definitions.Add(new SqlTypeDefinition { SqlType = SupportedSqlType.SmallMoney }, "SMALLMONEY");
-            definitions.Add(new SqlTypeDefinition { SqlType = SupportedSqlType.Money }, "MONEY");
-            definitions.Add(new SqlTypeDefinition { SqlType = SupportedSqlType.Decimal }, "DECIMAL");
-            definitions.Add(new SqlTypeDefinition { SqlType = SupportedSqlType.Decimal, Precision = 10 }, "DECIMAL(10)");
-            definitions.Add(new SqlTypeDefinition { SqlType = SupportedSqlType.Decimal, Precision = 10, Scale = 3 }, "DECIMAL(10, 3)");
-            definitions.Add(new SqlTypeDefinition { SqlType = SupportedSqlType.Real }, "REAL");
-            definitions.Add(new SqlTypeDefinition { SqlType = SupportedSqlType.Float }, "FLOAT");
-            definitions.Add(new SqlTypeDefinition { SqlType = SupportedSqlType.Float, Size = 10 }, "FLOAT(10)");
-            definitions.Add(new SqlTypeDefinition { SqlType = SupportedSqlType.Time }, "TIME");
-            definitions.Add(new SqlTypeDefinition { SqlType = SupportedSqlType.Time, Scale = 2 }, "TIME(2)");
-            definitions.Add(new SqlTypeDefinition { SqlType = SupportedSqlType.Date }, "DATE");
-            definitions.Add(new SqlTypeDefinition { SqlType = SupportedSqlType.SmallDateTime }, "SMALLDATETIME");
-            definitions.Add(new SqlTypeDefinition { SqlType = SupportedSqlType.DateTime }, "DATETIME");
-            definitions.Add(new SqlTypeDefinition { SqlType = SupportedSqlType.DateTime2 }, "DATETIME2");
-            definitions.Add(new SqlTypeDefinition { SqlType = SupportedSqlType.DateTime2, Scale = 2 }, "DATETIME2(2)");
-            definitions.Add(new SqlTypeDefinition { SqlType = SupportedSqlType.DateTimeOffset }, "DATETIMEOFFSET");
-            definitions.Add(new SqlTypeDefinition { SqlType = SupportedSqlType.DateTimeOffset, Scale = 2 }, "DATETIMEOFFSET(2)");
-
             // Text Rückgabe testen
-            foreach (var def in definitions)
-            {
-                Assert.AreEqual(def.Value, def.Key.ToString());
-            }
+            SqlTypeDefinition actual = new() { SqlType = testType, Precision = testPrecision, Scale = testScale, Size = testSize };
 
+            Assert.AreEqual(expectedResult, actual.ToString());
         }
 
         /// <summary>
@@ -231,6 +274,7 @@ namespace BiemannT.MUT.MsSql.Def.Common.Test
 
         // Testdaten für Float
         [DataRow("Float", SupportedSqlType.Float, (byte)0, (byte)0, 0)]
+        [DataRow("FLOAT(10)", SupportedSqlType.Float, (byte)10, (byte)0, 0)]
 
         // Testdaten für Time
         [DataRow("time", SupportedSqlType.Time, (byte)0, (byte)0, 0)]
