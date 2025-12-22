@@ -7,7 +7,7 @@ namespace BiemannT.MUT.MsSql.Def.Common
     /// Represents the definition of a SQL data type, including its type, size, precision, and scale as parsed from a
     /// SQL type declaration string.
     /// </summary>
-    public class SqlTypeDefinition : IDefValidation
+    public class SqlTypeDefinition : IDefValidation, IEquatable<SqlTypeDefinition>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="SqlTypeDefinition"/>-class with default values indicating an unsupported SQL type.
@@ -436,5 +436,49 @@ namespace BiemannT.MUT.MsSql.Def.Common
             // Ansonsten die Liste mit den gefundenen Fehlern
             return results.AsReadOnly();
         }
+
+        #region IEquatable<SqlTypeDefinition> Members
+
+        /// <summary>
+        /// Indicates whether the current instance is equal to another <see cref="SqlTypeDefinition"/> instance.
+        /// </summary>
+        /// <remarks>Equality is determined by comparing the SqlType, Size, Precision, and Scale
+        /// properties of both instances.</remarks>
+        /// <param name="other">The <see cref="SqlTypeDefinition"/> instance to compare with the current instance. Can be <see langword="null"/>.</param>
+        /// <returns><see langword="true"/> if the specified <see cref="SqlTypeDefinition"/> is equal to the current instance; otherwise, <see langword="false"/>.</returns>
+        public bool Equals(SqlTypeDefinition? other)
+        {
+            if (other is null) return false;
+
+            return SqlType == other.SqlType &&
+                   Size == other.Size &&
+                   Precision == other.Precision &&
+                   Scale == other.Scale;
+        }
+
+        /// <summary>
+        /// Determines whether the specified object is equal to the current <see cref="SqlTypeDefinition"/> instance.
+        /// </summary>
+        /// <param name="obj">The object to compare with the current <see cref="SqlTypeDefinition"/> instance.</param>
+        /// <returns><see langword="true"/> if the specified object is a <see cref="SqlTypeDefinition"/> and is equal to the current instance; otherwise, <see langword="false"/>.</returns>
+        public override bool Equals(object? obj)
+        {
+            if (obj is SqlTypeDefinition other)
+            {
+                return Equals(other);
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Serves as the default hash function for the current object.
+        /// </summary>
+        /// <returns>A 32-bit signed integer hash code representing the current object.</returns>
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(SqlType, Size, Precision, Scale);
+        }
+
+        #endregion
     }
 }
