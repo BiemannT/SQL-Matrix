@@ -143,5 +143,122 @@ namespace BiemannT.MUT.MsSql.Def.Common.Test
             }
 
         }
+
+        /// <summary>
+        /// Verifies that parsing a SQL type definition string produces the expected type, precision, scale, and size
+        /// values.
+        /// </summary>
+        /// <remarks>This test method uses multiple data rows to validate parsing for a variety of SQL
+        /// Server type definitions, including edge cases and unsupported types.</remarks>
+        /// <param name="testDefinition">The SQL type definition string to parse. This may include type name and optional parameters such as size,
+        /// precision, or scale.</param>
+        /// <param name="expectedType">The expected SQL type, as determined by parsing the definition string.</param>
+        /// <param name="expectedPrecision">The expected precision value to be extracted from the type definition. Used for types that support
+        /// precision; otherwise, 0.</param>
+        /// <param name="expectedScale">The expected scale value to be extracted from the type definition. Used for types that support scale;
+        /// otherwise, 0.</param>
+        /// <param name="expectedSize">The expected size value to be extracted from the type definition. Used for types that support size;
+        /// otherwise, 0 or -1 for 'max'.</param>
+        [TestMethod]
+
+        // Testdaten für einen Unknown Typ
+        [DataRow("UnknownType", SupportedSqlType.NotSupported, (byte)0, (byte)0, 0)]
+        [DataRow("NChar(abc)", SupportedSqlType.NotSupported, (byte)0, (byte)0, 0)]
+
+        // Testdaten für Binary
+        [DataRow("binary", SupportedSqlType.Binary, (byte)0, (byte)0, 0)]
+        [DataRow("BINARY(1000)", SupportedSqlType.Binary, (byte)0, (byte)0, 1000)]
+
+        // Testdaten für Varbinary
+        [DataRow("VARBINARY", SupportedSqlType.VarBinary, (byte)0, (byte)0, 0)]
+        [DataRow("varbinary(max)", SupportedSqlType.VarBinary, (byte)0, (byte)0, -1)]
+        [DataRow("varbinary(1000)", SupportedSqlType.VarBinary, (byte)0, (byte)0, 1000)]
+
+        // Testdaten für Char
+        [DataRow("char", SupportedSqlType.Char, (byte)0, (byte)0, 0)]
+        [DataRow("CHAR(100)", SupportedSqlType.Char, (byte)0, (byte)0, 100)]
+
+        // Testdaten für Varchar
+        [DataRow("varchar", SupportedSqlType.VarChar, (byte)0, (byte)0, 0)]
+        [DataRow("VARCHAR(MAX)", SupportedSqlType.VarChar, (byte)0, (byte)0, -1)]
+        [DataRow("varchar(100)", SupportedSqlType.VarChar, (byte)0, (byte)0, 100)]
+
+        // Testdaten für Nchar
+        [DataRow("nchar", SupportedSqlType.NChar, (byte)0, (byte)0, 0)]
+        [DataRow("NCHAR(100)", SupportedSqlType.NChar, (byte)0, (byte)0, 100)]
+
+        // Testdaten für Nvarchar
+        [DataRow("NVARCHAR", SupportedSqlType.NVarChar, (byte)0, (byte)0, 0)]
+        [DataRow("nvarchar(MAX)", SupportedSqlType.NVarChar, (byte)0, (byte)0, -1)]
+        [DataRow("NvarChar(100)", SupportedSqlType.NVarChar, (byte)0, (byte)0, 100)]
+
+        // Testdaten für Uniqueidentifier
+        [DataRow("uniqueidentifier", SupportedSqlType.UniqueIdentifier, (byte)0, (byte)0, 0)]
+
+        // Testdaten für Bit
+        [DataRow("BIT", SupportedSqlType.Bit, (byte)0, (byte)0, 0)]
+
+        // Testdaten für Tinyint
+        [DataRow("TinyInt", SupportedSqlType.TinyInt, (byte)0, (byte)0, 0)]
+
+        // Testdaten für Smallint
+        [DataRow("smallint", SupportedSqlType.SmallInt, (byte)0, (byte)0, 0)]
+
+        // Testdaten für Int
+        [DataRow("INT", SupportedSqlType.Int, (byte)0, (byte)0, 0)]
+
+        // Testdaten für Bigint
+        [DataRow("BigInt", SupportedSqlType.BigInt, (byte)0, (byte)0, 0)]
+
+        // Testdaten für Smallmoney
+        [DataRow("SMALLMONEY", SupportedSqlType.SmallMoney, (byte)0, (byte)0, 0)]
+
+        // Testdaten für Money
+        [DataRow("MONEY", SupportedSqlType.Money, (byte)0, (byte)0, 0)]
+
+        // Testdaten für Decimal und Numeric
+        [DataRow("decimal", SupportedSqlType.Decimal, (byte)0, (byte)0, 0)]
+        [DataRow("decimal(20)", SupportedSqlType.Decimal, (byte)20, (byte)0, 0)]
+        [DataRow("DECIMAL(20, 10)", SupportedSqlType.Decimal, (byte)20, (byte)10, 0)]
+        [DataRow("decimal(20,10)", SupportedSqlType.Decimal, (byte)20, (byte)10, 0)]
+        [DataRow("numeric", SupportedSqlType.Decimal, (byte)0, (byte)0, 0)]
+        [DataRow("numeric(20)", SupportedSqlType.Decimal, (byte)20, (byte)0, 0)]
+        [DataRow("NUMERIC(20, 10)", SupportedSqlType.Decimal, (byte)20, (byte)10, 0)]
+        [DataRow("Numeric(20,10)", SupportedSqlType.Decimal, (byte)20, (byte)10, 0)]
+
+        // Testdaten für Real
+        [DataRow("real", SupportedSqlType.Real, (byte)0, (byte)0, 0)]
+
+        // Testdaten für Float
+        [DataRow("Float", SupportedSqlType.Float, (byte)0, (byte)0, 0)]
+
+        // Testdaten für Time
+        [DataRow("time", SupportedSqlType.Time, (byte)0, (byte)0, 0)]
+        [DataRow("TIME(2)", SupportedSqlType.Time, (byte)0, (byte)2, 0)]
+
+        // Testdaten für Date
+        [DataRow("Date", SupportedSqlType.Date, (byte)0, (byte)0, 0)]
+
+        // Testdaten für Smalldatetime
+        [DataRow("smallDateTime", SupportedSqlType.SmallDateTime, (byte)0, (byte)0, 0)]
+
+        // Testdaten für Datetime
+        [DataRow("dateTime", SupportedSqlType.DateTime, (byte)0, (byte)0, 0)]
+
+        // Testdaten für Datetime2
+        [DataRow("DateTime2", SupportedSqlType.DateTime2, (byte)0, (byte)0, 0)]
+        [DataRow("datetime2(5)", SupportedSqlType.DateTime2, (byte)0, (byte)5, 0)]
+
+        // Testdaten für DateTimeOffset
+        [DataRow("datetimeoffset", SupportedSqlType.DateTimeOffset, (byte)0, (byte)0, 0)]
+        [DataRow("DATETIMEOFFSET(3)", SupportedSqlType.DateTimeOffset, (byte)0, (byte)3, 0)]
+        public void Test_ParseSqlTypeDefinition(string testDefinition, SupportedSqlType expectedType, byte expectedPrecision, byte expectedScale, int expectedSize)
+        {
+            // Test ausführen
+            SqlTypeDefinition expected = new() { SqlType = expectedType, Precision = expectedPrecision, Scale = expectedScale, Size = expectedSize };
+            SqlTypeDefinition actual = new(testDefinition);
+
+            Assert.AreEqual(expected, actual);
+        }
     }
 }
