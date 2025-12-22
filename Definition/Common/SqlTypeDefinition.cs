@@ -198,7 +198,7 @@ namespace BiemannT.MUT.MsSql.Def.Common
             {
                 if (analyze.Groups[3].Success)
                 {
-                    if (analyze.Groups[3].Value == "MAX")
+                    if (analyze.Groups[3].Value.ToUpper() == "MAX")
                     {
                         analyzeMAX = true;
                     }
