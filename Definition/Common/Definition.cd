@@ -14,12 +14,13 @@
   <Class Name="BiemannT.MUT.MsSql.Def.Common.Input">
     <Position X="5" Y="3.25" Width="2.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAACAAAEAAACAAABQAAAAAAAAAIAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAgCAAAEAAACAAAJQAAAAAAAAAIAA=</HashCode>
       <FileName>Common\Input.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
       <Property Name="SqlTypeDef" />
     </ShowAsAssociation>
+    <Lollipop Position="0.2" />
   </Class>
   <Class Name="BiemannT.MUT.MsSql.Def.Common.ExpectedResult">
     <Position X="5" Y="7.25" Width="2.5" />
@@ -34,7 +35,7 @@
   <Class Name="BiemannT.MUT.MsSql.Def.Common.SqlTypeDefinition">
     <Position X="10.5" Y="3.25" Width="2.75" />
     <TypeIdentifier>
-      <HashCode>AAAQAAAAAACAgAAEAAIAAAAAAAAAAAAAAAAAAAAAEAE=</HashCode>
+      <HashCode>AAAQAAAAAACAgAAEgAIAAAAAAAAAAIAAAAAAAAAAEAE=</HashCode>
       <FileName>Common\SqlTypeDefinition.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>

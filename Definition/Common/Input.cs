@@ -5,7 +5,7 @@ namespace BiemannT.MUT.MsSql.Def.Common
     /// <summary>
     /// This class provides properties and methods to represent a definition of a parameter requested by the test object.
     /// </summary>
-    public class Input
+    public class Input : IEquatable<Input>
     {
         /// <summary>
         /// Initializes a new instance of the Input class with default values for all properties.
@@ -62,5 +62,47 @@ namespace BiemannT.MUT.MsSql.Def.Common
         /// User values will be ignored, if the <see cref="Direction"/> is not <see cref="ParameterDirection.Input"/>.
         /// </remarks>
         public virtual List<object> UserValues { get; protected set; }
+
+        #region IEquatable<Input> Members
+
+        /// <summary>
+        /// Determines whether the current <see cref="Input"/> instance is equal to another <see cref="Input"/> instance based on the parameter
+        /// name, using a case-insensitive comparison.
+        /// </summary>
+        /// <param name="other">The <see cref="Input"/> instance to compare with the current instance, or <see langword="null"/> to compare against no object.</param>
+        /// <returns><see langword="true"/> if the parameter names are equal, ignoring case; otherwise, <see langword="false"/>.</returns>
+        public bool Equals(Input? other)
+        {
+            if (other is null) return false;
+
+            return this.ParameterName.Equals(other.ParameterName, StringComparison.InvariantCultureIgnoreCase);
+        }
+
+        /// <summary>
+        /// Determines whether the specified object is equal to the current <see cref="Input"/> instance.
+        /// </summary>
+        /// <param name="obj">The object to compare with the current <see cref="Input"/> instance.</param>
+        /// <returns><see langword="true"/> if the specified object is an instance of <see cref="Input"/> and is equal to the current instance; otherwise, <see langword="false"/>.</returns>
+        public override bool Equals(object? obj)
+        {
+            if (obj is Input other)
+            {
+                return Equals(other);
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Serves as the default hash function for the object.
+        /// </summary>
+        /// <remarks>The hash code is based on the lowercase invariant form of the parameter name,
+        /// ensuring that parameter names differing only by case produce the same hash code.</remarks>
+        /// <returns>A hash code for the current object, computed using a case-insensitive representation of the parameter name.</returns>
+        public override int GetHashCode()
+        {
+            return ParameterName.ToLowerInvariant().GetHashCode();
+        }
+
+        #endregion
     }
 }
